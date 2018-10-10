@@ -1,0 +1,212 @@
+{
+  "202": {
+    "id": 202,
+    "name": "Kleiner Transporter",
+    "cargo_capacity": 5000,
+    "cost": {
+      "metal": 2000,
+      "crystal": 2000,
+      "deuterium": 0
+    }
+  },
+  "203": {
+    "id": 203,
+    "name": "Großer Transporter",
+    "cargo_capacity": 25000,
+    "cost": {
+      "metal": 6000,
+      "crystal": 6000,
+      "deuterium": 0
+    }
+  },
+  "204": {
+    "id": 204,
+    "name": "Leichter Jäger",
+    "cargo_capacity": 50,
+    "cost": {
+      "metal": 3000,
+      "crystal": 1000,
+      "deuterium": 0
+    }
+  },
+  "205": {
+    "id": 205,
+    "name": "Schwerer Jäger",
+    "cargo_capacity": 100,
+    "cost": {
+      "metal": 6000,
+      "crystal": 4000,
+      "deuterium": 0
+    }
+  },
+  "206": {
+    "id": 206,
+    "name": "Kreuzer",
+    "cargo_capacity": 800,
+    "cost": {
+      "metal": 20000,
+      "crystal": 7000,
+      "deuterium": 2000
+    }
+  },
+  "207": {
+    "id": 207,
+    "name": "Schlachtschiff",
+    "cargo_capacity": 1500,
+    "cost": {
+      "metal": 45000,
+      "crystal": 15000,
+      "deuterium": 0
+    }
+  },
+  "208": {
+    "id": 208,
+    "name": "Kolonieschiff",
+    "cargo_capacity": 7500,
+    "cost": {
+      "metal": 10000,
+      "crystal": 20000,
+      "deuterium": 10000
+    }
+  },
+  "209": {
+    "id": 209,
+    "name": "Recycler",
+    "cargo_capacity": 20000,
+    "cost": {
+      "metal": 10000,
+      "crystal": 6000,
+      "deuterium": 2000
+    }
+  },
+  "211": {
+    "id": 211,
+    "name": "Bomber",
+    "cargo_capacity": 500,
+    "cost": {
+      "metal": 50000,
+      "crystal": 25000,
+      "deuterium": 15000
+    }
+  },
+  "212": {
+    "id": 212,
+    "name": "Solarsatelit",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 0,
+      "crystal": 2000,
+      "deuterium": 500
+    }
+  },
+  "213": {
+    "id": 213,
+    "name": "Zerstörer",
+    "cargo_capacity": 2000,
+    "cost": {
+      "metal": 60000,
+      "crystal": 50000,
+      "deuterium": 15000
+    }
+  },
+  "214": {
+    "id": 214,
+    "name": "Todesstern",
+    "cargo_capacity": 1000000,
+    "cost": {
+      "metal": 5000000,
+      "crystal": 4000000,
+      "deuterium": 1000000
+    }
+  },
+  "215": {
+    "id": 215,
+    "name": "Schlachtkreuzer",
+    "cargo_capacity": 750,
+    "cost": {
+      "metal": 30000,
+      "crystal": 40000,
+      "deuterium": 15000
+    }
+  },
+  "401": {
+    "id": 401,
+    "name": "Raketenwerfer",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 2000,
+      "crystal": 0,
+      "deuterium": 0
+    }
+  },
+  "402": {
+    "id": 402,
+    "name": "Leichtes Lasergeschütz",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 1500,
+      "crystal": 500,
+      "deuterium": 0
+    }
+  },
+  "403": {
+    "id": 403,
+    "name": "Schweres Lasergeschütz",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 6000,
+      "crystal": 2000,
+      "deuterium": 0
+    }
+  },
+  "404": {
+    "id": 404,
+    "name": "Gaußkanone",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 20000,
+      "crystal": 15000,
+      "deuterium": 2000
+    }
+  },
+  "405": {
+    "id": 405,
+    "name": "Ionenkanone",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 2000,
+      "crystal": 6000,
+      "deuterium": 0
+    }
+  },
+  "406": {
+    "id": 406,
+    "name": "Plasmawerfer",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 50000,
+      "crystal": 50000,
+      "deuterium": 30000
+    }
+  },
+  "407": {
+    "id": 407,
+    "name": "Kleine Schlidkuppel",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 10000,
+      "crystal": 10000,
+      "deuterium": 0
+    }
+  },
+  "408": {
+    "id": 408,
+    "name": "Große Schlidkuppel",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 50000,
+      "crystal": 50000,
+      "deuterium": 0
+    }
+  }
+}

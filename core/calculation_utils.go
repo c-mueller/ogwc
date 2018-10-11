@@ -15,13 +15,22 @@
 
 package core
 
-func (p ParticipantList) Find(name string) *Participant {
-	for _, v := range p {
+func (p *Participant) AddFleetLoss(f Fleet) {
+	if p.AdditionalLosses == nil {
+		p.AdditionalLosses = &f
+	} else {
+		r := p.AdditionalLosses.Add(f)
+		p.AdditionalLosses = &r
+	}
+}
+
+func (p ParticipantList) Find(name string) (int, *Participant) {
+	for i, v := range p {
 		if name == v.Name {
-			return &v
+			return i, &v
 		}
 	}
-	return nil
+	return -1, nil
 }
 
 func (p ParticipantList) IsPresent(name string) bool {

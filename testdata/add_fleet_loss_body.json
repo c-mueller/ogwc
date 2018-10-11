@@ -1,0 +1,27 @@
+{
+  "name": "Chris",
+  "lost_fleet": {
+    "light_fighter": 0,
+    "heavy_fighter": 0,
+    "cruiser": 0,
+    "battleship": 0,
+    "battlecruiser": 0,
+    "bomber": 0,
+    "destroyer": 0,
+    "deathstar": 42,
+    "small_cargo": 0,
+    "large_cargo": 0,
+    "recycler": 0,
+    "colonyship": 0,
+    "probe": 0,
+    "satellite": 0,
+    "rocket_launcher": 0,
+    "light_laser": 0,
+    "heavy_laser": 0,
+    "gauss_cannon": 0,
+    "ion_cannon": 0,
+    "plasma_cannon": 0,
+    "small_shield": 0,
+    "large_shield": 0
+  }
+}

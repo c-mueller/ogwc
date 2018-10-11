@@ -18,50 +18,41 @@ package ogwc
 import (
 	"github.com/c-mueller/ogwc/core"
 	"github.com/c-mueller/ogwc/repo"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 	"github.com/op/go-logging"
-	"regexp"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-type errorResponse struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
-type calculationCreationResponse struct {
-	Code          int    `json:"code"`
-	CalculationID string `json:"calculation_id"`
-}
-
-type MetricsUserAccount struct {
-	Username string
-	Password string
-}
 
 var log = logging.MustGetLogger("application")
-
-var crRegex = regexp.MustCompile("cr-[a-z]{2}-[0-9]{1,3}-[0-9a-f]{40}")
-var rrRegex = regexp.MustCompile("rr-[a-z]{2}-[0-9]{1,3}-[0-9a-f]{40}")
 
 func init() {
 	gin.SetMode(gin.ReleaseMode)
 }
 
 type OGWCApplication struct {
-	repo   repo.Repository
-	engine *gin.Engine
-	api    core.OGameAPI
-
+	repo         repo.Repository
+	engine       *gin.Engine
+	api          core.OGameAPI
+	UserAccounts []MetricsUserAccount
 }
 
 func (a *OGWCApplication) Init(c *redis.Options) error {
+	users := a.initMetricsUserAccounts()
+
 	a.repo = repo.Repository{
 		Options: *c,
 	}
 	a.api = core.OGAPIRestAPI{}
 
 	a.engine = gin.Default()
+	a.engine.Use(cors.Default())
+	a.engine.Use(a.metricsMiddleware)
+
+	a.initializePrometheusMetricsHandling(users)
 
 	a.engine.POST("/api/v1/submit/:key", a.newCalculation)
 
@@ -70,11 +61,48 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 
 	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
 
+	a.engine.POST("/api/v1/calculation/:id/participant/add-loss", a.addAdditionalFleetLoss)
+	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addAdditionalFleetLoss)
+
+	a.engine.POST("/api/v1/calculation/:id/participant/win/percentage", a.updateWinPercentageOfParticipant)
+	a.engine.POST("/api/v1/calculation/:id/participant/win/fixed", a.updateFixedWinOfParticipant)
+	a.engine.POST("/api/v1/calculation/:id/participant/win/none", a.updateDisableWinOfParticipant)
+
+	a.engine.POST("/api/v1/calculation/:id/rebalance-win", a.rebalancePercentage)
+
 	return nil
+}
+
+func (a *OGWCApplication) initializePrometheusMetricsHandling(users map[string]string) {
+	metricsGroup := a.engine.Group("/metrics", gin.BasicAuth(users))
+	prometheusHandler := promhttp.Handler()
+	metricsGroup.GET("/", func(ctx *gin.Context) {
+		prometheusHandler.ServeHTTP(ctx.Writer, ctx.Request)
+	})
+}
+
+func (a *OGWCApplication) initMetricsUserAccounts() map[string]string {
+	if len(a.UserAccounts) == 0 {
+		uid, _ := uuid.NewUUID()
+		password := uid.String()
+		a.UserAccounts = []MetricsUserAccount{
+			{
+				Username: "admin",
+				Password: password,
+			},
+		}
+
+		log.Infof("Created Metrics Credentials Username: %q Password: %q", a.UserAccounts[0].Username, a.UserAccounts[0].Password)
+	}
+	users := make(map[string]string)
+	for _, v := range a.UserAccounts {
+		users[v.Username] = v.Password
+	}
+
+	return users
 }
 
 func (a *OGWCApplication) Serve(bindUrl string) {
 	a.repo.Connect()
 	a.engine.Run(bindUrl)
 }
-

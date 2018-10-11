@@ -1,0 +1,200 @@
+// ogwc (https://github.com/c-mueller/ogwc).
+// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+package ogwc
+
+import (
+	"fmt"
+	"github.com/c-mueller/ogwc/core"
+	"github.com/gin-gonic/gin"
+	"strconv"
+)
+
+type additionalFleetLossRequest struct {
+	Name      string     `json:"name"`
+	LostFleet core.Fleet `json:"lost_fleet"`
+}
+
+func (a *OGWCApplication) rebalancePercentage(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	calc.RebalanceDistributionPercentage()
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}
+
+func (a *OGWCApplication) updateWinPercentageOfParticipant(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	name := a.getParticipantNameQueryParameter(ctx, calc)
+	if len(name) == 0 {
+		return
+	}
+
+	percentage := ctx.Query("percentage")
+
+	percFloat, err := strconv.ParseFloat(percentage, 64)
+	if err != nil {
+		ctx.JSON(400, errorResponse{
+			Code:    400,
+			Message: "Invalid Percentage",
+		})
+		return
+	}
+
+	idx, p := calc.Participants.Find(name)
+
+	p.DistribuitonMode = core.PERCENTAGE
+	p.WinPercentage = percFloat
+	p.FixedResourceAmount = nil
+
+	calc.Participants[idx] = *p
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}
+
+func (a *OGWCApplication) updateFixedWinOfParticipant(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	name := a.getParticipantNameQueryParameter(ctx, calc)
+	if len(name) == 0 {
+		return
+	}
+
+	var res core.Resources
+	err := ctx.BindJSON(&res)
+	if err != nil {
+		return
+	}
+
+	idx, p := calc.Participants.Find(name)
+
+	p.DistribuitonMode = core.FIXED_AMOUNT
+	p.WinPercentage = 0
+	p.FixedResourceAmount = &res
+
+	calc.Participants[idx] = *p
+
+	a.updateWithErrorHandling(id, calc, ctx)
+
+}
+
+func (a *OGWCApplication) updateDisableWinOfParticipant(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	name := a.getParticipantNameQueryParameter(ctx, calc)
+	if len(name) == 0 {
+		return
+	}
+
+	idx, p := calc.Participants.Find(name)
+
+	p.DistribuitonMode = core.NONE
+	p.WinPercentage = 0
+	p.FixedResourceAmount = nil
+
+	calc.Participants[idx] = *p
+
+	a.updateWithErrorHandling(id, calc, ctx)
+
+}
+
+func (a *OGWCApplication) addParticipant(ctx *gin.Context) {
+
+}
+
+func (a *OGWCApplication) addAdditionalFleetLoss(ctx *gin.Context) {
+	var requestData additionalFleetLossRequest
+
+	if err := ctx.BindJSON(&requestData); err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	idx, participant := calc.Participants.Find(requestData.Name)
+
+	if participant == nil {
+		ctx.JSON(404, errorResponse{
+			Code:    404,
+			Message: fmt.Sprintf("Participant with name %q not found", requestData.Name),
+		})
+		return
+	}
+
+	participant.AddFleetLoss(requestData.LostFleet)
+
+	calc.Participants[idx] = *participant
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}
+
+func (a *OGWCApplication) addKey(ctx *gin.Context) {
+	key := ctx.Param("key")
+
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	if rrRegex.Match([]byte(key)) {
+		report, err := a.api.GetHarvestReport(key)
+		if err != nil {
+			ctx.JSON(404, errorResponse{
+				Code:    404,
+				Message: fmt.Sprintf("Fetching the API Key %q failed. Error Message: %q", key, err.Error()),
+			})
+			return
+		}
+
+		calc.AddHarvestReport(*report)
+
+	} else if crRegex.Match([]byte(key)) {
+		report, err := a.api.GetCombatReport(key)
+		if err != nil {
+			ctx.JSON(404, errorResponse{
+				Code:    404,
+				Message: fmt.Sprintf("Fetching the API Key %q failed. Error Message: %q", key, err.Error()),
+			})
+			return
+		}
+
+		calc.AddCombatReport(*report, true)
+	} else {
+		ctx.JSON(400, errorResponse{
+			Code:    400,
+			Message: "Invalid API Key!",
+		})
+		return
+	}
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}

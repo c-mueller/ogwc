@@ -20,62 +20,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (a *OGWCApplication) addKey(ctx *gin.Context) {
-	id := ctx.Param("id")
-	key := ctx.Param("key")
-
-	calc := a.repo.Get(id)
-	if calc == nil {
-		ctx.JSON(404, errorResponse{
-			Code:    404,
-			Message: "Calculation not found",
-		})
-		return
-	}
-
-	if rrRegex.Match([]byte(key)) {
-		report, err := a.api.GetHarvestReport(key)
-		if err != nil {
-			ctx.JSON(404, errorResponse{
-				Code:    404,
-				Message: fmt.Sprintf("Fetching the API Key %q failed. Error Message: %q", key, err.Error()),
-			})
-			return
-		}
-
-		calc.AddHarvestReport(*report)
-
-	} else if crRegex.Match([]byte(key)) {
-		report, err := a.api.GetCombatReport(key)
-		if err != nil {
-			ctx.JSON(404, errorResponse{
-				Code:    404,
-				Message: fmt.Sprintf("Fetching the API Key %q failed. Error Message: %q", key, err.Error()),
-			})
-			return
-		}
-
-		calc.AddCombatReport(*report, true)
-	} else {
-		ctx.JSON(400, errorResponse{
-			Code:    400,
-			Message: "Invalid API Key!",
-		})
-		return
-	}
-
-	a.repo.Update(id, *calc)
+type calculationCreationResponse struct {
+	Code           int    `json:"code"`
+	CalculationID  string `json:"calculation_id"`
+	CalculationURL string `json:"calculation_url"`
 }
 
 func (a *OGWCApplication) getReport(ctx *gin.Context) {
-	id := ctx.Param("id")
-
-	calc := a.repo.Get(id)
+	_, calc := a.getCalculationFromContext(ctx)
 	if calc == nil {
-		ctx.JSON(404, errorResponse{
-			Code:    404,
-			Message: "Calculation not found",
-		})
 		return
 	}
 
@@ -83,14 +36,8 @@ func (a *OGWCApplication) getReport(ctx *gin.Context) {
 }
 
 func (a *OGWCApplication) getCalculation(ctx *gin.Context) {
-	id := ctx.Param("id")
-
-	calc := a.repo.Get(id)
+	_, calc := a.getCalculationFromContext(ctx)
 	if calc == nil {
-		ctx.JSON(404, errorResponse{
-			Code:    404,
-			Message: "Calculation not found",
-		})
 		return
 	}
 
@@ -120,7 +67,9 @@ func (a *OGWCApplication) newCalculation(ctx *gin.Context) {
 	uid := a.repo.Insert(*calculation)
 
 	ctx.JSON(201, calculationCreationResponse{
-		Code:          201,
-		CalculationID: uid,
+		Code:           201,
+		CalculationID:  uid,
+		// TODO Implement proper scheme detection
+		CalculationURL: fmt.Sprintf("http://%s/api/v1/calculation/%s",  ctx.Request.Host, uid),
 	})
 }

@@ -152,7 +152,7 @@ func (c *CombatReportCalculation) AddCombatReport(cr CombatReport, isAttacker bo
 		}
 		c.LootPerParticipant[name] = append(c.LootPerParticipant[name], loot...)
 
-		if c.Participants.Find(name) == nil {
+		if _, p := c.Participants.Find(name); p == nil {
 			c.AddParticipant(Participant{
 				Name:             name,
 				DistribuitonMode: NONE,
@@ -172,10 +172,11 @@ func (c *CombatReportCalculation) RebalanceDistributionPercentage() {
 		}
 	}
 
-	for _, v := range c.Participants {
+	for i, v := range c.Participants {
 		if v.DistribuitonMode == PERCENTAGE {
 			v.WinPercentage = float64(1) / float64(count)
 		}
+		c.Participants[i] = v
 	}
 }
 

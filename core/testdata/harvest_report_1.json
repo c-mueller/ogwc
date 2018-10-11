@@ -1,0 +1,17 @@
+{
+  "generic": {
+    "rr_id": "d70fc986576ef211217916930b83104e70ff691f",
+    "event_time": "2018-10-09T03:31:15+02:00",
+    "event_timestamp": 1539048675,
+    "coordinates": "7:100:8",
+    "recycler_count": "3000",
+    "recycler_capacity": "60000000",
+    "metal_in_debris_field": "26237400",
+    "crystal_in_debris_field": "22813000",
+    "metal_retrieved": 26237400,
+    "crystal_retrieved": "22813000",
+    "owner_name": "Chris",
+    "owner_alliance_name": "Aggressive Alkis",
+    "owner_alliance_tag": "Aggressive Alkis"
+  }
+}

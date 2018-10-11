@@ -1,0 +1,198 @@
+// ogwc (https://github.com/c-mueller/ogwc).
+// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+package core
+
+func (c *CombatReportCalculation) AddAdditionalLossForParticipant(name string, fleet Fleet) {
+	for idx, p := range c.Participants {
+		if p.Name == name {
+			if p.AdditionalLosses == nil {
+				p.AdditionalLosses = &fleet
+			} else {
+				totalFleetLoss := p.AdditionalLosses.Add(fleet)
+				p.AdditionalLosses = &totalFleetLoss
+			}
+			c.Participants[idx] = p
+			return
+		}
+	}
+}
+
+func (c *CombatReportCalculation) GetReport() CalculationResponse {
+	lossesPerPlayer := make(map[string]Resources)
+	incomePerPlayer := make(map[string]Resources)
+
+	lootPerPlayer := make(map[string]Resources)
+	harvestedPerPlayer := make(map[string]Resources)
+
+	winPerPlayer := make(map[string]Resources)
+
+	claimedPerPlayer := make(map[string]Resources)
+	balancePerPlayer := make(map[string]Resources)
+
+	totalLosses := Resources{}
+	totalIncome := Resources{}
+
+	participantsByDistibutionType := make(map[DistributionMode][]Participant)
+
+	for _, participant := range c.Participants {
+		loss := Resources{}
+
+		if participant.AdditionalLosses != nil {
+			loss = loss.Add(participant.AdditionalLosses.ToResources())
+		}
+
+		loss = loss.Add(c.Losses[participant.Name].ToResources())
+
+		lossesPerPlayer[participant.Name] = loss
+
+		income := Resources{}
+		loot := Resources{}
+		harvested := Resources{}
+
+		for _, v := range c.LootPerParticipant[participant.Name] {
+			income = income.Add(v)
+			loot = loot.Add(v)
+		}
+
+		for _, v := range c.HarvestReports[participant.Name] {
+			income = income.Add(v)
+			harvested = harvested.Add(v)
+		}
+
+		lootPerPlayer[participant.Name] = loot
+		harvestedPerPlayer[participant.Name] = harvested
+
+		incomePerPlayer[participant.Name] = income
+
+		totalIncome = totalIncome.Add(income)
+		totalLosses = totalLosses.Add(loss)
+
+		if participantsByDistibutionType[participant.DistribuitonMode] == nil {
+			participantsByDistibutionType[participant.DistribuitonMode] = make([]Participant, 0)
+		}
+		participantsByDistibutionType[participant.DistribuitonMode] = append(participantsByDistibutionType[participant.DistribuitonMode], participant)
+	}
+
+	totalWin := totalIncome.Sub(totalLosses)
+
+	totalWinNoFixed := totalWin.Add(Resources{})
+
+	for _, p := range participantsByDistibutionType[FIXED_AMOUNT] {
+		if p.FixedResourceAmount == nil {
+			continue
+		}
+
+		totalWinNoFixed = totalWinNoFixed.Sub(*p.FixedResourceAmount)
+
+		winPerPlayer[p.Name] = *p.FixedResourceAmount
+
+	}
+
+	for _, p := range participantsByDistibutionType[PERCENTAGE] {
+		winPerPlayer[p.Name] = totalWinNoFixed.MulF(p.WinPercentage)
+	}
+
+	for _, p := range c.Participants {
+		claimedPerPlayer[p.Name] = lossesPerPlayer[p.Name].Add(winPerPlayer[p.Name])
+		balancePerPlayer[p.Name] = incomePerPlayer[p.Name].Sub(claimedPerPlayer[p.Name])
+	}
+
+	return CalculationResponse{
+		TotalIncome:             totalIncome,
+		TotalLoss:               totalLosses,
+		TotalWin:                totalWin,
+		WinPerParticipant:       winPerPlayer,
+		LossPerParticipant:      lossesPerPlayer,
+		IncomePerParticipant:    incomePerPlayer,
+		ClaimedPerParticipant:   claimedPerPlayer,
+		BalancePerParticipant:   balancePerPlayer,
+		HarvestedPerParticipant: harvestedPerPlayer,
+		LootPerParticipant:      lootPerPlayer,
+	}
+}
+
+func (c *CombatReportCalculation) AddParticipant(p Participant) {
+	//TODO Implement checking for valid Distribution Percentage
+	if !c.Participants.IsPresent(p.Name) {
+		c.Participants = append(c.Participants, p)
+	}
+}
+
+func (c *CombatReportCalculation) AddCombatReport(cr CombatReport, isAttacker bool) {
+	getBP, getBRE, _, _ := cr.getCollectionFunctions(isAttacker)
+	lossMap := cr.getFleetLosses(getBP, getBRE)
+	loot := cr.getLoot()
+
+	initialFleet := cr.getInitialFleet(getBP)
+	_, lootPerPlayer := cr.getParticipantsAndLootDistribution(initialFleet, loot)
+
+	for name, loot := range lootPerPlayer {
+		losses := lossMap[name]
+
+		initial := initialFleet[name]
+
+		c.InitialFleet[name] = c.InitialFleet[name].Add(initial)
+
+		c.Losses[name] = c.Losses[name].Add(losses)
+		if c.LootPerParticipant[name] == nil {
+			c.LootPerParticipant[name] = make([]Resources, 0)
+		}
+		c.LootPerParticipant[name] = append(c.LootPerParticipant[name], loot...)
+
+		if c.Participants.Find(name) == nil {
+			c.AddParticipant(Participant{
+				Name:             name,
+				DistribuitonMode: NONE,
+			})
+		}
+	}
+
+	c.RawCombatReports = append(c.RawCombatReports, cr)
+}
+
+func (c *CombatReportCalculation) RebalanceDistributionPercentage() {
+	count := 0
+
+	for _, v := range c.Participants {
+		if v.DistribuitonMode == PERCENTAGE {
+			count++
+		}
+	}
+
+	for _, v := range c.Participants {
+		if v.DistribuitonMode == PERCENTAGE {
+			v.WinPercentage = float64(1) / float64(count)
+		}
+	}
+}
+
+func (c *CombatReportCalculation) AddHarvestReport(h HarvestReport) {
+	m := c.HarvestReports[h.Generic.OwnerName]
+	if m == nil {
+		m = make([]Resources, 0)
+	}
+	m = append(m, h.ToResources())
+	c.HarvestReports[h.Generic.OwnerName] = m
+
+	c.RawHarvestReports = append(c.RawHarvestReports, h)
+
+	if !c.Participants.IsPresent(h.Generic.OwnerName) {
+		c.Participants = append(c.Participants, Participant{
+			Name:             h.Generic.OwnerName,
+			DistribuitonMode: NONE,
+		})
+	}
+}

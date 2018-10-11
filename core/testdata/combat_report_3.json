@@ -1,0 +1,525 @@
+{
+  "repaired_defenses": [
+    {
+      "repaired_type": 401,
+      "repaired_count": 3404
+    },
+    {
+      "repaired_type": 403,
+      "repaired_count": 114
+    },
+    {
+      "repaired_type": 407,
+      "repaired_count": 1
+    }
+  ],
+  "generic": {
+    "cr_id": "83ade651b4ff46cb6195eec7fb248c6488dbff5c",
+    "event_time": "2018-10-09T03:19:48+02:00",
+    "event_timestamp": 1539047988,
+    "combat_coordinates": "7:100:8",
+    "combat_planet_type": 1,
+    "combat_rounds": 4,
+    "loot_percentage": 100,
+    "winner": "attacker",
+    "units_lost_attackers": 9375000,
+    "units_lost_defenders": 77145500,
+    "attacker_count": 1,
+    "defender_count": 1,
+    "loot_metal": 3283333,
+    "loot_crystal": 833808,
+    "loot_deuterium": 5732859,
+    "combat_honorable": true,
+    "attacker_honorable": true,
+    "attacker_honorpoints": 8654,
+    "defender_honorable": true,
+    "defender_honorpoints": 1882,
+    "moon_created": false,
+    "moon_chance": 0,
+    "moon_size": 0,
+    "moon_exists": true,
+    "debris_metal": 26237400,
+    "debris_crystal": 22765400,
+    "wreckfield": [
+      {
+        "ship_type": 202,
+        "count": 195
+      },
+      {
+        "ship_type": 209,
+        "count": 82
+      }
+    ]
+  },
+  "attackers": [
+    {
+      "fleet_owner": "Chris",
+      "fleet_owner_coordinates": "7:123:11",
+      "fleet_owner_planet_type": 3,
+      "fleet_owner_planet_name": "Tanke",
+      "fleet_owner_alliance": "Aggressive Alkis",
+      "fleet_owner_alliance_tag": "AGGRO",
+      "fleet_armor_percentage": 190,
+      "fleet_shield_percentage": 190,
+      "fleet_weapon_percentage": 190,
+      "fleet_composition": [
+        {
+          "ship_type": 213,
+          "armor": 31900,
+          "shield": 1450,
+          "weapon": 5800,
+          "count": 5000
+        }
+      ]
+    }
+  ],
+  "defenders": [
+    {
+      "fleet_owner": "death wish",
+      "fleet_owner_coordinates": "7:100:8",
+      "fleet_owner_planet_type": 1,
+      "fleet_owner_planet_name": "Rosengarten",
+      "fleet_owner_alliance": "Knechte Reloaded",
+      "fleet_owner_alliance_tag": "KNECHTE",
+      "fleet_armor_percentage": 180,
+      "fleet_shield_percentage": 160,
+      "fleet_weapon_percentage": 180,
+      "fleet_composition": [
+        {
+          "ship_type": 202,
+          "armor": 1120,
+          "shield": 26,
+          "weapon": 14,
+          "count": 1281
+        },
+        {
+          "ship_type": 209,
+          "armor": 4480,
+          "shield": 26,
+          "weapon": 2.8,
+          "count": 542
+        },
+        {
+          "ship_type": 210,
+          "armor": 280,
+          "shield": 0.026,
+          "weapon": 0.028,
+          "count": 912
+        },
+        {
+          "ship_type": 212,
+          "armor": 560,
+          "shield": 2.6,
+          "weapon": 2.8,
+          "count": 1023
+        },
+        {
+          "ship_type": 214,
+          "armor": 2520000,
+          "shield": 130000,
+          "weapon": 560000,
+          "count": 5
+        },
+        {
+          "ship_type": 401,
+          "armor": 560,
+          "shield": 52,
+          "weapon": 224,
+          "count": 3868
+        },
+        {
+          "ship_type": 403,
+          "armor": 2240,
+          "shield": 260,
+          "weapon": 700,
+          "count": 130
+        },
+        {
+          "ship_type": 407,
+          "armor": 5600,
+          "shield": 5200,
+          "weapon": 2.8,
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round_number": 1,
+      "statistics": {
+        "attacker_hits": "6213",
+        "attacker_absorbed": "1010864",
+        "attacker_fullstrength": "36035400",
+        "defender_hits": "7783",
+        "defender_absorbed": "201565",
+        "defender_fullstrength": "15538498"
+      },
+      "attacker_ships": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 4974
+        }
+      ],
+      "attacker_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": "26"
+        }
+      ],
+      "defender_ships": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 568
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 232
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 424
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 458
+        },
+        {
+          "owner": 0,
+          "ship_type": 214,
+          "count": 5
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 1766
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 42
+        },
+        {
+          "owner": 0,
+          "ship_type": 407,
+          "count": 1
+        }
+      ],
+      "defender_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": "713"
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": "310"
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": "488"
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": "565"
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": "2102"
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": "88"
+        }
+      ]
+    },
+    {
+      "round_number": 2,
+      "statistics": {
+        "attacker_hits": "6198",
+        "attacker_absorbed": "450834",
+        "attacker_fullstrength": "35948400",
+        "defender_hits": "3503",
+        "defender_absorbed": "157143",
+        "defender_fullstrength": "7154318"
+      },
+      "attacker_ships": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 4962
+        }
+      ],
+      "attacker_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 12
+        }
+      ],
+      "defender_ships": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 92
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 33
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 75
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 78
+        },
+        {
+          "owner": 0,
+          "ship_type": 214,
+          "count": 5
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 289
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 7
+        },
+        {
+          "owner": 0,
+          "ship_type": 407,
+          "count": 1
+        }
+      ],
+      "defender_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 476
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 199
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 349
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 380
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 1477
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 35
+        }
+      ]
+    },
+    {
+      "round_number": 3,
+      "statistics": {
+        "attacker_hits": "6273",
+        "attacker_absorbed": "98717",
+        "attacker_fullstrength": "36383400",
+        "defender_hits": "594",
+        "defender_absorbed": "350407",
+        "defender_fullstrength": "10711148"
+      },
+      "attacker_ships": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 4943
+        }
+      ],
+      "attacker_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 19
+        }
+      ],
+      "defender_ships": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 214,
+          "count": 5
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 407,
+          "count": 0
+        }
+      ],
+      "defender_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 92
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 33
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 75
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 78
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 289
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 7
+        },
+        {
+          "owner": 0,
+          "ship_type": 407,
+          "count": "1"
+        }
+      ]
+    },
+    {
+      "round_number": 4,
+      "statistics": {
+        "attacker_hits": "4943",
+        "attacker_absorbed": "26118",
+        "attacker_fullstrength": "28669400",
+        "defender_hits": "18",
+        "defender_absorbed": "722000",
+        "defender_fullstrength": "10080000"
+      },
+      "attacker_ships": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 4925
+        }
+      ],
+      "attacker_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 213,
+          "count": 18
+        }
+      ],
+      "defender_ships": [
+        {
+          "owner": 0,
+          "ship_type": 202,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 209,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 210,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 212,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 214,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 401,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 403,
+          "count": 0
+        },
+        {
+          "owner": 0,
+          "ship_type": 407,
+          "count": 0
+        }
+      ],
+      "defender_ship_losses": [
+        {
+          "owner": 0,
+          "ship_type": 214,
+          "count": "5"
+        }
+      ]
+    }
+  ]
+}

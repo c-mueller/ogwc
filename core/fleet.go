@@ -47,6 +47,21 @@ type Fleet struct {
 	LargeShield    uint `json:"large_shield" eid:"408"`
 }
 
+func (a Fleet) IsZero() bool {
+	t := reflect.TypeOf(a)
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+
+		count := reflect.ValueOf(a).FieldByName(field.Name).Uint()
+
+		if count != 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func (a Fleet) GetCargoCapacity() int {
 	var r int = 0
 

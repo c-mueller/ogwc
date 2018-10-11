@@ -123,8 +123,53 @@ func (a *OGWCApplication) updateDisableWinOfParticipant(ctx *gin.Context) {
 
 }
 
-func (a *OGWCApplication) addParticipant(ctx *gin.Context) {
+func (a *OGWCApplication) deleteParticipant(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
 
+	name := a.getParticipantNameQueryParameter(ctx, calc)
+	if len(name) == 0 {
+		return
+	}
+
+	if !calc.InitialFleet[name].IsZero() {
+		ctx.JSON(400, errorResponse{
+			Code:    400,
+			Message: "This Participant cannot be removed.",
+		})
+		return
+	}
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}
+
+func (a *OGWCApplication) addParticipant(ctx *gin.Context) {
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	name := ctx.Query("name")
+	if len(name) == 0 {
+		return
+	}
+
+	if calc.Participants.IsPresent(name) {
+		ctx.JSON(400, errorResponse{
+			Code:    400,
+			Message: "The Participant name has to be unique",
+		})
+		return
+	}
+
+	calc.Participants = append(calc.Participants, core.Participant{
+		Name:             name,
+		DistribuitonMode: core.NONE,
+	})
+
+	a.updateWithErrorHandling(id, calc, ctx)
 }
 
 func (a *OGWCApplication) addAdditionalFleetLoss(ctx *gin.Context) {

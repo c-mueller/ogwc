@@ -26,7 +26,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-
 var log = logging.MustGetLogger("application")
 
 func init() {
@@ -62,7 +61,8 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
 
 	a.engine.POST("/api/v1/calculation/:id/participant/add-loss", a.addAdditionalFleetLoss)
-	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addAdditionalFleetLoss)
+	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addParticipant)
+	a.engine.DELETE("/api/v1/calculation/:id/participant/delete", a.deleteParticipant)
 
 	a.engine.POST("/api/v1/calculation/:id/participant/win/percentage", a.updateWinPercentageOfParticipant)
 	a.engine.POST("/api/v1/calculation/:id/participant/win/fixed", a.updateFixedWinOfParticipant)

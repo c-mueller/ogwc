@@ -1,11 +1,28 @@
+<!--
+// ogwc (https://github.com/c-mueller/ogwc).
+// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <div class="bottom-margin">
   <button class="btn btn-block btn-danger" aria-controls="block" (click)="toggle()">
     <div class="row">
       <div class="col-sm-4" style="align-content: center">
         {{playerName}}
       </div>
-      <app-resource-view class="col-sm-4" [resource]="getLoot()" [heading]="'Erbeutet'"  ></app-resource-view>
-      <app-resource-view class="col-sm-4" [resource]="getHarvested()" [heading]="'Abgebaut'"  ></app-resource-view>
+      <app-resource-view class="col-sm-4" [resource]="getLoot()" [heading]="'Erbeutet'"></app-resource-view>
+      <app-resource-view class="col-sm-4" [resource]="getHarvested()" [heading]="'Abgebaut'"></app-resource-view>
     </div>
   </button>
   <div id="block" [ngbCollapse]="collapse">
@@ -15,7 +32,25 @@
           <h5 class="card-title">Verluste</h5>
           <app-fleet-view [fleet]="getLostFleet()"></app-fleet-view>
         </div>
-
+        <div class="card card-body col-sm-12 col-md-6 side-margin">
+          <h5 class="card-title" style="margin-bottom: 10px">Einnahmen</h5>
+          <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Beute</strong></h6>
+          <div *ngFor="let i of calculation.loot_per_participant[playerName]" style="margin-bottom: 10px;">
+            <app-resource-view [resource]="i"></app-resource-view>
+          </div>
+          <p class="card-text" *ngIf="calculation.loot_per_participant[playerName] == null">
+            Keine Kampfberichte mit Beute abgespeichert!
+          </p>
+          <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Abgebaut</strong></h6>
+          <div *ngFor="let i of calculation.harvest_reports[playerName]" style="margin-bottom: 10px;">
+            <app-resource-view [resource]="i"></app-resource-view>
+          </div>
+          <p class="card-text" *ngIf="calculation.harvest_reports[playerName] == null">
+            Keine Abbauberichte abgespeichert!
+          </p>
+          <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Gesamteinkommen</strong></h6>
+          <app-resource-view [resource]="sum([getHarvested(),getLoot()])"></app-resource-view>
+        </div>
       </div>
       <div class="row">
         <div class="card card-body col-sm-12 side-margin">

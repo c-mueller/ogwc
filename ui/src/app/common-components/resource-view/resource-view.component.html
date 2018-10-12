@@ -1,17 +1,34 @@
+<!--
+// ogwc (https://github.com/c-mueller/ogwc).
+// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <div>
   <h6 *ngIf="heading != null" style="text-align: center">{{heading}}</h6>
   <table class="full-width">
     <tr>
       <td class="half-width">Metall</td>
-      <td class="half-width">{{resource.metal}}</td>
+      <td class="half-width">{{resource.metal.toLocaleString("de")}}</td>
     </tr>
     <tr>
       <td class="half-width">Kristall</td>
-      <td class="half-width">{{resource.crystal}}</td>
+      <td class="half-width">{{resource.crystal.toLocaleString("de")}}</td>
     </tr>
     <tr>
       <td class="half-width">Deuterium</td>
-      <td class="half-width">{{resource.deuterium}}</td>
+      <td class="half-width">{{resource.deuterium.toLocaleString("de")}}</td>
     </tr>
   </table>
 </div>

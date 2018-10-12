@@ -16,6 +16,7 @@
 package ogwc
 
 import (
+	"github.com/GeertJohan/go.rice"
 	"github.com/c-mueller/ogwc/core"
 	"github.com/c-mueller/ogwc/repo"
 	"github.com/gin-contrib/cors"
@@ -53,6 +54,16 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 
 	a.initializePrometheusMetricsHandling(users)
 
+	ui, err := rice.FindBox("app-ui")
+	if err == nil {
+		a.engine.StaticFS("/ui", ui.HTTPBox())
+
+		a.engine.GET("/", a.redirectToUi)
+		a.engine.GET("/c/:id", a.redirectToCalculationUi)
+	} else {
+		log.Warning("This is a Development Binary. This Means the WebApplication is not available on <URL>/ui")
+	}
+
 	a.engine.POST("/api/v1/submit/:key", a.newCalculation)
 
 	a.engine.GET("/api/v1/calculation/:id", a.getCalculation)
@@ -71,6 +82,14 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 	a.engine.POST("/api/v1/calculation/:id/rebalance-win", a.rebalancePercentage)
 
 	return nil
+}
+
+func (a *OGWCApplication) redirectToUi(ctx *gin.Context) {
+	ctx.Redirect(301, "/ui")
+}
+func (a *OGWCApplication) redirectToCalculationUi(ctx *gin.Context) {
+	id := ctx.Param("id")
+	ctx.Redirect(301, "/ui/#/calculation/"+id)
 }
 
 func (a *OGWCApplication) initializePrometheusMetricsHandling(users map[string]string) {

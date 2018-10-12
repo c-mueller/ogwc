@@ -1,0 +1,62 @@
+<div class="card-body">
+  <div *ngIf="calculation != null">
+    <h5 class="card-title">Berechnung - {{this.calculationID}}</h5>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Teilnehmer</h5>
+        <div *ngFor="let p of participants">
+          <app-participant-list-element [playerName]="p.name" [participant]="p"
+                                        [calculation]="calculation"></app-participant-list-element>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card top-margin">
+      <div class="card-body">
+        <h5 class="card-title">Hinzufügen</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card margin">
+              <div class="card-body">
+                <h5 class="card-title">Report Hinzufügen</h5>
+                <p class="card-text">
+                  Diese Funktion erlaubt das hinzufügen von Abbauberichten und weiteren Kampfberichten. <br>
+                  Ist ein Teilnehmer in diesem Report nicht bekannt, wird dieser der Teilnehmerliste automatisch
+                  hinzugefügt.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card col-md-6 margin">
+              <div class="card-body">
+                <h5 class="card-title">Teilnehmer Hinzufügen</h5>
+                <p class="card-text">
+                  Diese Funktion erlaubt das hinzufügen von weiteren Teilnehmern.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card top-margin">
+      <div class="card-body">
+        <h5 class="card-title">Gewinnverteilung Berechnen</h5>
+        <button class="btn btn-block btn-lg btn-danger">Berechnung durchführen</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="card top-margin">
+    <div class="card-body">
+      <h5 class="card-title">Shortlink</h5>
+      <p class="card-text">
+        Die Berechnung kann über den Shortlink <a [href]="getShortLink()">{{getShortLink()}}</a> abgerufen werden.
+      </p>
+    </div>
+  </div>
+</div>

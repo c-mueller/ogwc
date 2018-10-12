@@ -23,18 +23,21 @@ const (
 	NONE         DistributionMode = 2
 )
 
+type FleetMap map[string]Fleet
+type RessourceSliceMap map[string][]Resources
+
 type CombatReportCalculation struct {
 	Participants ParticipantList `json:"participants"`
 
-	Attacker           bool                   `json:"attacker"`
-	InitialFleet       map[string]Fleet       `json:"initial_fleet"`
-	Losses             map[string]Fleet       `json:"losses"`
-	TotalLoot          Resources              `json:"total_loot"`
-	LootPerParticipant map[string][]Resources `json:"loot_per_participant"`
-	HarvestReports     map[string][]Resources `json:"harvest_reports"`
+	Attacker           bool              `json:"attacker"`
+	InitialFleet       FleetMap          `json:"initial_fleet"`
+	Losses             FleetMap          `json:"losses"`
+	TotalLoot          Resources         `json:"total_loot"`
+	LootPerParticipant RessourceSliceMap `json:"loot_per_participant"`
+	HarvestReports     RessourceSliceMap `json:"harvest_reports"`
 
-	InitialFleetOpponent map[string]Fleet `json:"initial_fleet_opponent"`
-	LossesOpponent       map[string]Fleet `json:"losses_opponent"`
+	InitialFleetOpponent FleetMap `json:"initial_fleet_opponent"`
+	LossesOpponent       FleetMap `json:"losses_opponent"`
 
 	RawCombatReports  []CombatReport  `json:"raw_combat_reports"`
 	RawHarvestReports []HarvestReport `json:"raw_harvest_reports"`

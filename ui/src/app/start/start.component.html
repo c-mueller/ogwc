@@ -1,0 +1,32 @@
+<div class="card-body">
+  <h5 class="card-title">OGWC - OGame Win Calculator</h5>
+  <p class="card-text">
+    OGWC ermöglicht das schnelle berechnen der Gewinnverteilung für einen AKS Kampfbericht.
+  </p>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Neue Berechnung anlegen</h5>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="api-key-input">OGame API-Key:</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="currentAPIKey" placeholder="cr-CC-XXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY" aria-label="Berechnungs ID"
+               aria-describedby="api-key-input">
+      </div>
+      <button class="btn btn-block btn-lg btn-danger" (click)="submitAPIKey()">Berechnung Anlegen</button>
+    </div>
+  </div>
+  <div class="card top-margin">
+    <div class="card-body">
+      <h5 class="card-title">Auf eine Berechnung mittels ID zugreifen</h5>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="id-input">ID:</span>
+        </div>
+        <input type="text" class="form-control" [(ngModel)]="currentID" placeholder="Berechnungs ID" aria-label="Berechnungs ID"
+               aria-describedby="id-input">
+      </div>
+      <button class="btn btn-block btn-lg btn-danger" (click)="openCalculation()">Abrufen</button>
+    </div>
+  </div>
+</div>

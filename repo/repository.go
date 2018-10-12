@@ -19,7 +19,6 @@ import (
 	"encoding/json"
 	"github.com/c-mueller/ogwc/core"
 	"github.com/go-redis/redis"
-	"github.com/google/uuid"
 )
 
 type Repository struct {
@@ -33,8 +32,13 @@ func (r *Repository) Connect() {
 
 func (r *Repository) Insert(calculation core.CombatReportCalculation) string {
 	data, _ := json.Marshal(calculation)
-	uid, _ := uuid.NewUUID()
-	uidString := uid.String()
+
+	uidString := ""
+	var e *core.CombatReportCalculation
+	for e != nil || len(uidString) == 0 {
+		uidString = generateID()
+		e = r.Get(uidString)
+	}
 
 	r.client.Set(uidString, data, -1)
 

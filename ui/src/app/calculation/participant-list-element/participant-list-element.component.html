@@ -1,0 +1,39 @@
+<div class="bottom-margin">
+  <button class="btn btn-block btn-danger" aria-controls="block" (click)="toggle()">
+    <div class="row">
+      <div class="col-sm-4" style="align-content: center">
+        {{playerName}}
+      </div>
+      <app-resource-view class="col-sm-4" [resource]="getLoot()" [heading]="'Erbeutet'"  ></app-resource-view>
+      <app-resource-view class="col-sm-4" [resource]="getHarvested()" [heading]="'Abgebaut'"  ></app-resource-view>
+    </div>
+  </button>
+  <div id="block" [ngbCollapse]="collapse">
+    <div class="card card-body">
+      <div class="row">
+        <div class="card card-body col-sm-12 col-md-6 side-margin">
+          <h5 class="card-title">Verluste</h5>
+          <app-fleet-view [fleet]="getLostFleet()"></app-fleet-view>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="card card-body col-sm-12 side-margin">
+          <h5 class="card-title">Gewinnanteil</h5>
+          <div *ngIf="!editWinDistribution">
+            <div *ngIf="participant.distribuiton_mode == 0">
+              Der Spieler {{playerName}} erhällt {{participant.win_percentage*100}}% des Gesamtgewinns.
+            </div>
+            <div *ngIf="participant.distribuiton_mode == 1">
+              Der Spieler {{playerName}} erhällt die folgende Rohstoffmenge als
+            </div>
+            <div *ngIf="participant.distribuiton_mode == 2">
+              Der Spieler {{playerName}} erhällt keinen Anteil des Gewinns.
+            </div>
+            <button class="btn btn-block btn-outline-primary" (click)="editWinDistribution = true">Ändern</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,20 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+export interface CalculationReport {
+  total_loss: Resources;
+  total_income: Resources;
+  total_win: Resources;
+
+  loss_per_participant: Map<string, Resources>;
+  harvested_per_participant: Map<string, Resources>;
+  loot_per_participant: Map<string, Resources>;
+  income_per_participant: Map<string, Resources>;
+  win_per_participant: Map<string, Resources>;
+  balance_per_participant: Map<string, Resources>;
+  claimed_per_participant: Map<string, Resources>;
+}
+
 export interface SubmissionResponse {
   code: number;
   calculation_id: string;

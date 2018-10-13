@@ -84,6 +84,7 @@ func (a *OGWCApplication) updateFixedWinOfParticipant(ctx *gin.Context) {
 	}
 
 	var res core.Resources
+
 	err := ctx.BindJSON(&res)
 	if err != nil {
 		return

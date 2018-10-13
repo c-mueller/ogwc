@@ -15,6 +15,75 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<p>
-  report works!
-</p>
+<div class="card-body" *ngIf="report != null">
+  <h5 class="card-title">Report für {{calculationID}}</h5>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Allgemein</h5>
+      <app-resource-table row-name="" [table]="getCommonMap()"></app-resource-table>
+    </div>
+  </div>
+
+  <div class=""></div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Verlust pro Spieler</h5>
+      <app-resource-table [table]="report.loss_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Beute pro Spieler</h5>
+      <app-resource-table [table]="report.loot_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Abgebaute Rohstoffe pro Spieler</h5>
+      <app-resource-table [table]="report.harvested_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Einkommen pro Spieler</h5>
+      <app-resource-table [table]="report.income_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Gewinn pro Spieler</h5>
+      <app-resource-table [table]="report.win_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Rohstoffanspruch pro Spieler</h5>
+      <app-resource-table [table]="report.claimed_per_participant"></app-resource-table>
+    </div>
+  </div>
+
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Balance pro Spieler</h5>
+      <app-resource-table [table]="report.balance_per_participant"></app-resource-table>
+    </div>
+  </div>
+  <div class="card spacer">
+    <div class="card-body">
+      <h5 class="card-title">Shortlink zum Report</h5>
+      <p class="card-text">
+        Der Report kann über den Shortlink <a [href]="getShortLink()">{{getShortLink()}}</a> abgerufen werden.
+        <button class="btn btn-sm btn-outline-info" ngxClipboard [cbContent]="getShortLink()">Link Kopieren</button>
+      </p>
+    </div>
+  </div>
+
+  <button class="btn btn-lg btn-block btn-outline-danger" (click)="navigateToCalculation()">Berechnung anpassen</button>
+</div>

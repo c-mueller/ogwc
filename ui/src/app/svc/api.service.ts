@@ -16,8 +16,9 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {CalculationResponse, SubmissionResponse} from './model';
+import {CalculationReport, CalculationResponse, Resources, SubmissionResponse} from './model';
 import {environment} from '../../environments/environment';
+import {resource} from 'selenium-webdriver/http';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,23 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
+  updateWinDistributionModeToPercentage(id: string, name: string, percentage: number) {
+    return this.http.post(environment.applicationEndpoint +
+      'api/v1/calculation/' + id + '/participant/win/percentage?name=' + name + '&percentage=' + percentage, null);
+  }
+
+  updateWinDistributionModeToFixedAmount(id: string, name: string, amount: Resources) {
+    return this.http.post(environment.applicationEndpoint +
+      'api/v1/calculation/' + id + '/participant/win/fixed?name=' + name, amount);
+  }
+
+  updateWinDistributionModeTonone(id: string, name: string) {
+    return this.http.post(environment.applicationEndpoint +
+      'api/v1/calculation/' + id + '/participant/win/none?name=' + name, null);
+  }
+
   addApiKey(key: string, id: string) {
-    return this.http.post<SubmissionResponse>(environment.applicationEndpoint + 'api/v1/calculation/' + id + '/add/' + key , null);
+    return this.http.post<SubmissionResponse>(environment.applicationEndpoint + 'api/v1/calculation/' + id + '/add/' + key, null);
   }
 
   submitReport(key: string) {
@@ -37,5 +53,9 @@ export class ApiService {
 
   fetchCalculation(id: string) {
     return this.http.get<CalculationResponse>(environment.applicationEndpoint + 'api/v1/calculation/' + id);
+  }
+
+  fetchReport(id: string) {
+    return this.http.get<CalculationReport>(environment.applicationEndpoint + 'api/v1/calculation/' + id + '/report');
   }
 }

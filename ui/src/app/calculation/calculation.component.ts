@@ -37,6 +37,10 @@ export class CalculationComponent implements OnInit {
               private api: ApiService) {
   }
 
+  loadReport() {
+    this.router.navigate(['/calculation', this.calculationID, 'report']);
+  }
+
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
       this.calculationID = p.get('id');
@@ -44,7 +48,7 @@ export class CalculationComponent implements OnInit {
     });
   }
 
-  private getCalculation() {
+  getCalculation() {
     this.api.fetchCalculation(this.calculationID).subscribe(e => {
       this.calculation = e;
       this.participants = this.calculation.participants;
@@ -52,6 +56,12 @@ export class CalculationComponent implements OnInit {
       console.log(err);
       this.router.navigate(['/404']);
     });
+  }
+
+  requestCallculationUpdate() {
+    if (this.calculation != null) {
+      this.getCalculation();
+    }
   }
 
   addAPIKey() {

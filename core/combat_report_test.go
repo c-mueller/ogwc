@@ -68,7 +68,7 @@ func Test_ToReportCalculation(t *testing.T) {
 		},
 	})
 
-	data, _ := json.MarshalIndent(calc.GetReport(), "", "  ")
+	data, _ := json.Marshal(calc)
 
 	fmt.Println(string(data))
 }

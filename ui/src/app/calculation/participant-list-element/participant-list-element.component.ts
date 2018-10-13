@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CalculationResponse, Fleet, Participant, Resources} from '../../svc/model';
-import {zeroFleet} from '../../svc/constants';
+import {winDistributionModes, zeroFleet} from '../../svc/constants';
+import {ApiService} from '../../svc/api.service';
 
 @Component({
   selector: 'app-participant-list-element',
@@ -25,8 +26,14 @@ import {zeroFleet} from '../../svc/constants';
 })
 export class ParticipantListElementComponent implements OnInit {
 
+  @Output('updated')
+  public updatePerformed: EventEmitter<any> = new EventEmitter();
+
   @Input('calculation')
   public calculation: CalculationResponse = null;
+
+  @Input('calculationID')
+  public calculationID: string;
 
   @Input('participant')
   public participant: Participant = null;
@@ -37,11 +44,69 @@ export class ParticipantListElementComponent implements OnInit {
   public collapse = true;
 
   public editWinDistribution = false;
+  public winDistributionMode = 0;
 
-  constructor() {
+  public fixedResourcesDistributionModeAmount: Resources;
+
+  public winPercentage = 0;
+
+  public distributionModeNames = winDistributionModes;
+
+  constructor(private api: ApiService) {
+  }
+
+  selectDistributionMode(mode: number) {
+    this.winDistributionMode = mode;
   }
 
   ngOnInit() {
+    this.winDistributionMode = this.participant.distribuiton_mode;
+    if (this.participant.fixed_resource_amount != null) {
+      this.fixedResourcesDistributionModeAmount = this.participant.fixed_resource_amount;
+    } else {
+      this.fixedResourcesDistributionModeAmount = {
+        metal: 0,
+        crystal: 0,
+        deuterium: 0,
+      };
+    }
+
+    this.winPercentage = this.participant.win_percentage * 100;
+  }
+
+  saveDistributionMode() {
+    if (this.winDistributionMode === 0) {
+      this.api.updateWinDistributionModeToPercentage(this.calculationID, this.playerName, this.winPercentage / 100).subscribe(e => {
+        this.onWinUpdateSuccess();
+      }, error1 => {
+        this.onWinUpdateFail();
+      });
+    } else if (this.winDistributionMode === 1) {
+      this.api.updateWinDistributionModeToFixedAmount(this.calculationID, this.playerName,
+        this.fixedResourcesDistributionModeAmount)
+        .subscribe(e => {
+          this.onWinUpdateSuccess();
+        }, error1 => {
+          this.onWinUpdateFail();
+        });
+    } else {
+      this.api.updateWinDistributionModeTonone(this.calculationID, this.playerName).subscribe(e => {
+        this.onWinUpdateSuccess();
+      }, error1 => {
+        this.onWinUpdateFail();
+      });
+    }
+  }
+
+  onWinUpdateSuccess() {
+    this.editWinDistribution = false;
+    alert('Gewinnverteilung angepasst');
+    this.updatePerformed.emit(null);
+  }
+
+  onWinUpdateFail() {
+    this.editWinDistribution = false;
+    alert('Gewinnverteilung konnte nicht angepasst werden!');
   }
 
   toggle() {

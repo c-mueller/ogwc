@@ -1,4 +1,4 @@
-/*
+<!--
 // ogwc (https://github.com/c-mueller/ogwc).
 // Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
 //
@@ -14,7 +14,22 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-.spacer {
-  margin-bottom: 2%;
-}
+-->
+<table class="table">
+  <thead>
+  <tr>
+    <th scope="col">{{rowName}}</th>
+    <th scope="col">Metall</th>
+    <th scope="col">Kristall</th>
+    <th scope="col">Deuterium</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let k of getKeys(table)">
+    <td scope="row">{{k}}</td>
+    <td>{{table[k].metal.toLocaleString("de")}}</td>
+    <td>{{table[k].crystal.toLocaleString("de")}}</td>
+    <td>{{table[k].deuterium.toLocaleString("de")}}</td>
+  </tr>
+  </tbody>
+</table>

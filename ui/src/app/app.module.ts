@@ -32,6 +32,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {ParticipantListElementComponent} from './calculation/participant-list-element/participant-list-element.component';
 import {ResourceViewComponent} from './common-components/resource-view/resource-view.component';
 import {FleetViewComponent} from './common-components/fleet-view/fleet-view.component';
+import {ResourceTableComponent} from './report/resource-table/resource-table.component';
+import {ClipboardModule} from 'ngx-clipboard';
 
 const appRoutes: Routes = [
   {path: 'start', component: StartComponent},
@@ -53,7 +55,8 @@ const appRoutes: Routes = [
     AboutComponent,
     ParticipantListElementComponent,
     ResourceViewComponent,
-    FleetViewComponent
+    FleetViewComponent,
+    ResourceTableComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +66,7 @@ const appRoutes: Routes = [
     FormsModule,
     HttpClientModule,
     CommonModule,
+    ClipboardModule,
   ],
   providers: [
     {

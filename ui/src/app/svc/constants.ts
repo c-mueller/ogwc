@@ -16,6 +16,12 @@
 
 import {Fleet} from './model';
 
+export const winDistributionModes = [
+  'Prozentualer Anteil',
+  'Feste Rohstoffmenge',
+  'Kein Gewinnanteil',
+];
+
 export const zeroFleet: Fleet = {
   'light_fighter': 0,
   'heavy_fighter': 0,

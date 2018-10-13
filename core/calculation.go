@@ -106,6 +106,10 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 		winPerPlayer[p.Name] = totalWinNoFixed.MulF(p.WinPercentage)
 	}
 
+	for _, p := range participantsByDistibutionType[NONE] {
+		winPerPlayer[p.Name] = Resources{}
+	}
+
 	for _, p := range c.Participants {
 		claimedPerPlayer[p.Name] = lossesPerPlayer[p.Name].Add(winPerPlayer[p.Name])
 		balancePerPlayer[p.Name] = incomePerPlayer[p.Name].Sub(claimedPerPlayer[p.Name])

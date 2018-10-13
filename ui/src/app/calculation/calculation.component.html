@@ -23,7 +23,8 @@
         <h5 class="card-title">Teilnehmer</h5>
         <div *ngFor="let p of participants">
           <app-participant-list-element [playerName]="p.name" [participant]="p"
-                                        [calculation]="calculation"></app-participant-list-element>
+                                        [calculation]="calculation" [calculationID]="calculationID"
+                                        (updated)="requestCallculationUpdate()"></app-participant-list-element>
         </div>
 
       </div>
@@ -46,7 +47,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="api-key-input">OGame API-Key:</span>
                   </div>
-                  <input type="text" class="form-control" [(ngModel)]="apiKey" placeholder="CR oder RR Key" aria-label="Berechnungs ID"
+                  <input type="text" class="form-control" [(ngModel)]="apiKey" placeholder="CR oder RR Key"
+                         aria-label="Berechnungs ID"
                          aria-describedby="api-key-input">
                 </div>
                 <button class="btn btn-block btn-lg btn-danger" (click)="addAPIKey()">Bericht hinzufügen</button>
@@ -71,7 +73,7 @@
     <div class="card top-margin">
       <div class="card-body">
         <h5 class="card-title">Gewinnverteilung Berechnen</h5>
-        <button class="btn btn-block btn-lg btn-danger">Berechnung durchführen</button>
+        <button class="btn btn-block btn-lg btn-danger" (click)="loadReport()">Berechnung durchführen</button>
       </div>
     </div>
 
@@ -81,6 +83,7 @@
       <h5 class="card-title">Shortlink</h5>
       <p class="card-text">
         Die Berechnung kann über den Shortlink <a [href]="getShortLink()">{{getShortLink()}}</a> abgerufen werden.
+        <button class="btn btn-sm btn-outline-info" ngxClipboard [cbContent]="getShortLink()">Link Kopieren</button>
       </p>
     </div>
   </div>

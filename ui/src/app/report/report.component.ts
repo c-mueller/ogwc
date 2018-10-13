@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ApiService} from '../svc/api.service';
+import {CalculationReport, Resources} from '../svc/model';
 
 @Component({
   selector: 'app-report',
@@ -23,9 +26,46 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportComponent implements OnInit {
 
-  constructor() { }
+  public calculationID = '';
+  public report: CalculationReport = null;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private api: ApiService
+  ) {
+  }
 
   ngOnInit() {
+    this.route.paramMap.subscribe(p => {
+      this.calculationID = p.get('id');
+      this.getReport();
+    });
+  }
+
+  getCommonMap(): any {
+    const m = {
+      'Gesamteinkommen': this.report.total_income,
+      'Gesamtverlust': this.report.total_loss,
+      'Gesamtgewinn': this.report.total_win
+    };
+    return m;
+  }
+
+  getReport() {
+    this.api.fetchReport(this.calculationID).subscribe(data => {
+      this.report = data;
+    }, error1 => this.router.navigate(['/404']));
+  }
+
+  getShortLink() {
+    let baseUrl = window.location.href;
+    baseUrl = baseUrl.split('#')[0].replace('ui/', '');
+    return baseUrl + 'r/' + this.calculationID;
+  }
+
+  navigateToCalculation() {
+    this.router.navigate(['/calculation', this.calculationID]);
   }
 
 }

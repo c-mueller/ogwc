@@ -1,4 +1,3 @@
-/*
 // ogwc (https://github.com/c-mueller/ogwc).
 // Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
 //
@@ -14,7 +13,36 @@
 //
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-.spacer {
-  margin-bottom: 2%;
+
+import {Component, Input, OnInit} from '@angular/core';
+import {Resources} from '../../svc/model';
+
+@Component({
+  selector: 'app-resource-table',
+  templateUrl: './resource-table.component.html',
+  styleUrls: ['./resource-table.component.css']
+})
+export class ResourceTableComponent implements OnInit {
+  @Input()
+  public table: Map<string, Resources>;
+
+  @Input('row-name')
+  public rowName = 'Spieler';
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
+
+  getKeys(m: Map<string, Resources>) {
+    const s: string[] = [];
+
+    for (const k of Object.keys(m)) {
+      console.log(k);
+      s.push(k);
+    }
+    return s;
+  }
+
 }

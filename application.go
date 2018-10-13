@@ -61,6 +61,7 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 
 		a.engine.GET("/", a.redirectToUi)
 		a.engine.GET("/c/:id", a.redirectToCalculationUi)
+		a.engine.GET("/r/:id", a.redirectToCalculationReportUi)
 	} else {
 		log.Warning("This is a Development Binary. This Means the WebApplication is not available on <URL>/ui")
 	}
@@ -88,9 +89,14 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 func (a *OGWCApplication) redirectToUi(ctx *gin.Context) {
 	ctx.Redirect(301, "/ui")
 }
+
 func (a *OGWCApplication) redirectToCalculationUi(ctx *gin.Context) {
 	id := ctx.Param("id")
 	ctx.Redirect(301, "/ui/#/calculation/"+id)
+}
+func (a *OGWCApplication) redirectToCalculationReportUi(ctx *gin.Context) {
+	id := ctx.Param("id")
+	ctx.Redirect(301, "/ui/#/calculation/"+id+"/report")
 }
 
 func (a *OGWCApplication) initializePrometheusMetricsHandling(users map[string]string) {

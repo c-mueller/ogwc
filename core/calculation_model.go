@@ -49,6 +49,8 @@ type CalculationResponse struct {
 	TotalIncome Resources `json:"total_income"`
 	TotalWin    Resources `json:"total_win"`
 
+	FleetLossPerParticipant FleetMap `json:"fleet_loss_per_participant"`
+
 	LossPerParticipant      ResourcesMap `json:"loss_per_participant"`
 	HarvestedPerParticipant ResourcesMap `json:"harvested_per_participant"`
 	LootPerParticipant      ResourcesMap `json:"loot_per_participant"`

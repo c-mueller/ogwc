@@ -17,17 +17,15 @@
 package core
 
 import (
-	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestOGAPIRestAPI_GetReport(t *testing.T) {
-	api := OGAPIRestAPI{}
-
-	cr, err := api.GetCombatReport("cr-de-138-25570d783e74776c24c99e2d20af12dc9897106d")
-	assert.NoError(t, err)
-
-	fmt.Println(cr)
+	//api := OGAPIRestAPI{}
+	//
+	//cr, err := api.GetCombatReport("cr-de-138-25570d783e74776c24c99e2d20af12dc9897106d")
+	//assert.NoError(t, err)
+	//
+	//fmt.Println(cr)
 
 }

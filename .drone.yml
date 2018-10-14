@@ -1,0 +1,40 @@
+workspace:
+  base: /go
+  path: src/github.com/c-mueller/ogwc
+
+pipeline:
+  build_ui:
+    image: johnpapa/angular-cli:latest
+    commands:
+      - "apk add --update fish"
+      - ./build_frontend.fish
+  build:
+    image: golang:latest
+    commands:
+    # Install Fish shell
+    - apt-get update && apt-get install -y fish
+    # Install Rice
+    - go get github.com/GeertJohan/go.rice
+    - go get github.com/GeertJohan/go.rice/rice
+    # Install Godep
+    - go get -u github.com/golang/dep/cmd/dep
+    # Build application
+    - ./build_backend.fish
+  test:
+    image: golang:${GO_VERSION}
+    commands:
+    - go test -v -cover ./...
+  cloc_report:
+    image: halive/git-cloc:latest
+    commands:
+    - cloc $(git ls-files)
+  github_release:
+    image: plugins/github-release
+    secrets: [ github_token ]
+    files:
+      - build/ogwd
+    checksum:
+    - sha256
+    - sha512
+    when:
+      event: tag

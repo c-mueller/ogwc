@@ -39,6 +39,10 @@ func (a *OGWCApplication) rebalancePercentage(ctx *gin.Context) {
 	a.updateWithErrorHandling(id, calc, ctx)
 }
 
+func (a *OGWCApplication) addResourceLoss(ctx *gin.Context) {
+
+}
+
 func (a *OGWCApplication) updateWinPercentageOfParticipant(ctx *gin.Context) {
 	id, calc := a.getCalculationFromContext(ctx)
 	if calc == nil {
@@ -143,6 +147,10 @@ func (a *OGWCApplication) deleteParticipant(ctx *gin.Context) {
 		})
 		return
 	}
+
+	idx, _ := calc.Participants.Find(name)
+
+	calc.Participants = append(calc.Participants[:idx], calc.Participants[(idx + 1):]...)
 
 	a.updateWithErrorHandling(id, calc, ctx)
 }

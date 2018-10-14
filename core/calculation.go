@@ -32,16 +32,17 @@ func (c *CombatReportCalculation) AddAdditionalLossForParticipant(name string, f
 }
 
 func (c *CombatReportCalculation) GetReport() CalculationResponse {
-	lossesPerPlayer := make(map[string]Resources)
-	incomePerPlayer := make(map[string]Resources)
+	lossesPerPlayer := make(ResourcesMap)
+	fleetLossPerPlayer := make(FleetMap)
+	incomePerPlayer := make(ResourcesMap)
 
-	lootPerPlayer := make(map[string]Resources)
-	harvestedPerPlayer := make(map[string]Resources)
+	lootPerPlayer := make(ResourcesMap)
+	harvestedPerPlayer := make(ResourcesMap)
 
-	winPerPlayer := make(map[string]Resources)
+	winPerPlayer := make(ResourcesMap)
 
-	claimedPerPlayer := make(map[string]Resources)
-	balancePerPlayer := make(map[string]Resources)
+	claimedPerPlayer := make(ResourcesMap)
+	balancePerPlayer := make(ResourcesMap)
 
 	totalLosses := Resources{}
 	totalIncome := Resources{}
@@ -51,13 +52,19 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 	for _, participant := range c.Participants {
 		loss := Resources{}
 
+		fleetLoss := Fleet{}
+
 		if participant.AdditionalLosses != nil {
 			loss = loss.Add(participant.AdditionalLosses.ToResources())
+			fleetLoss = fleetLoss.Add(*participant.AdditionalLosses)
 		}
 
 		loss = loss.Add(c.Losses[participant.Name].ToResources())
 
+		fleetLoss = fleetLoss.Add(c.Losses[participant.Name])
+
 		lossesPerPlayer[participant.Name] = loss
+		fleetLossPerPlayer[participant.Name] = fleetLoss
 
 		income := Resources{}
 		loot := Resources{}
@@ -126,6 +133,7 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 		BalancePerParticipant:   balancePerPlayer,
 		HarvestedPerParticipant: harvestedPerPlayer,
 		LootPerParticipant:      lootPerPlayer,
+		FleetLossPerParticipant: fleetLossPerPlayer,
 	}
 }
 

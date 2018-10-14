@@ -52,7 +52,27 @@ export class ParticipantListElementComponent implements OnInit {
 
   public distributionModeNames = winDistributionModes;
 
+  public deletionClickCount = 0;
+  public deletionTexts = [
+    'Diesen Teilnehmer löschen',
+    'Zum löschen des Teilnehmers erneut Klicken.'
+  ];
+
   constructor(private api: ApiService) {
+  }
+
+  deleteParticipant() {
+    this.deletionClickCount = (this.deletionClickCount + 1) % this.deletionTexts.length;
+
+    if (this.deletionClickCount === 0) {
+      this.api.deleteParticipant(this.calculationID, this.playerName).subscribe(e => {
+        this.updatePerformed.emit(null);
+        alert('Teilnehmer gelöscht!');
+      }, e => {
+        console.log(e);
+        alert('Teilnehmer konnte nicht gelöscht werden!');
+      });
+    }
   }
 
   selectDistributionMode(mode: number) {

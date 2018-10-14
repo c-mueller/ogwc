@@ -26,6 +26,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/op/go-logging"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"os"
 )
 
 var log = logging.MustGetLogger("application")
@@ -74,8 +75,9 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
 
 	a.engine.POST("/api/v1/calculation/:id/participant/add-loss", a.addAdditionalFleetLoss)
+	a.engine.POST("/api/v1/calculation/:id/participant/add-resource-loss", a.addResourceLoss)
 	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addParticipant)
-	a.engine.DELETE("/api/v1/calculation/:id/participant/delete", a.deleteParticipant)
+	a.engine.POST("/api/v1/calculation/:id/participant/delete", a.deleteParticipant)
 
 	a.engine.POST("/api/v1/calculation/:id/participant/win/percentage", a.updateWinPercentageOfParticipant)
 	a.engine.POST("/api/v1/calculation/:id/participant/win/fixed", a.updateFixedWinOfParticipant)
@@ -94,6 +96,7 @@ func (a *OGWCApplication) redirectToCalculationUi(ctx *gin.Context) {
 	id := ctx.Param("id")
 	ctx.Redirect(301, "/ui/#/calculation/"+id)
 }
+
 func (a *OGWCApplication) redirectToCalculationReportUi(ctx *gin.Context) {
 	id := ctx.Param("id")
 	ctx.Redirect(301, "/ui/#/calculation/"+id+"/report")
@@ -129,6 +132,11 @@ func (a *OGWCApplication) initMetricsUserAccounts() map[string]string {
 }
 
 func (a *OGWCApplication) Serve(bindUrl string) {
-	a.repo.Connect()
+	err := a.repo.Connect()
+	if err != nil {
+		log.Error("Connection to Redis failed.")
+		log.Error(err.Error())
+		os.Exit(1)
+	}
 	a.engine.Run(bindUrl)
 }

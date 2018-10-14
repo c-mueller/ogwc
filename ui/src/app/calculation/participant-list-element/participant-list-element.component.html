@@ -75,12 +75,14 @@
                 </div>
                 <div *ngIf="participant.distribuiton_mode == 1">
                   Der Spieler {{playerName}} erhällt die folgende Rohstoffmenge als Gewinn.
-                  <app-resource-view heading="Fester Gewinnanteil" [resource]="fixedResourcesDistributionModeAmount"></app-resource-view>
+                  <app-resource-view heading="Fester Gewinnanteil"
+                                     [resource]="fixedResourcesDistributionModeAmount"></app-resource-view>
                 </div>
                 <div *ngIf="participant.distribuiton_mode == 2">
                   Der Spieler {{playerName}} erhällt keinen Anteil des Gewinns.
                 </div>
-                <button class="btn btn-block btn-outline-primary btn-lg" (click)="editWinDistribution = true">Ändern</button>
+                <button class="btn btn-block btn-outline-primary btn-lg" (click)="editWinDistribution = true">Ändern
+                </button>
               </div>
               <div *ngIf="editWinDistribution">
                 <div class="input-group mb-12">
@@ -146,6 +148,20 @@
           </div>
 
         </div>
+
+      </div>
+      <div class="row">
+
+        <div class="col-sm-12">
+          <div class="card r-margin l-margin" style="margin-top: 1%;">
+            <div class="card-body">
+              <button class="btn btn-lg btn-block btn-dark" (click)="deleteParticipant()">
+                {{deletionTexts[deletionClickCount]}}
+              </button>
+            </div>
+          </div>
+        </div>
+
 
       </div>
     </div>

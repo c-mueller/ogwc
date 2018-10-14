@@ -24,7 +24,7 @@
         <div *ngFor="let p of participants">
           <app-participant-list-element [playerName]="p.name" [participant]="p"
                                         [calculation]="calculation" [calculationID]="calculationID"
-                                        (updated)="requestCallculationUpdate()"></app-participant-list-element>
+                                        (updated)="requestCalculationUpdate()"></app-participant-list-element>
         </div>
 
       </div>
@@ -57,12 +57,21 @@
           </div>
 
           <div class="col-md-6">
-            <div class="card col-md-6 margin">
+            <div class="card margin">
               <div class="card-body full-width">
                 <h5 class="card-title">Teilnehmer Hinzufügen</h5>
                 <p class="card-text">
                   Diese Funktion erlaubt das hinzufügen von weiteren Teilnehmern.
                 </p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="p-name-input">Teilnehmername:</span>
+                  </div>
+                  <input type="text" class="form-control" [(ngModel)]="newParticipantName" placeholder="Teilnehmername"
+                         aria-label="Teilnehmername"
+                         aria-describedby="p-name-input">
+                </div>
+                <button class="btn btn-block btn-lg btn-danger" (click)="addParticipant()">Teilnehmer hinzufügen</button>
               </div>
             </div>
           </div>

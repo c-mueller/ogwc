@@ -1,0 +1,56 @@
+@startuml
+class Calculation {
+    + Version: int64
+    + CreationTimestamp: int64
+    + LastUpdate: int64
+    + Attacker: bool
+    + Participants: Participant[]
+    + RawData: Map<string, string>
+}
+
+class Participant {
+    // The Name of the Player
+    // Used to identify the Players Reports
+    // Must be Unique within the Calculation
+    + Name: string
+    // The Rank of the Player
+    // This will later be used to minimize the 
+    // Resource Transfers from lower ranked players to higher ranked ones
+    // To avoid contacting game support as often as possible
+    + Rank: int64
+    // The Loot captured by the participants fleets (in the submitted Combat Reports)
+    + ReportedLoot: Resources[]
+    // The loot added manually 
+    + ExternalLoot: Resources[]
+    // The resources harvested by the Player (Taken from submitted Combat Reports)
+    + ReportedHarvested: Resources[]
+    // 
+    + ExternalHarvested: Resources[]
+    + ReportedFleetLoss: Fleet
+    + ExternalFleetLoss: Fleet
+    + ExternalResourceLoss: Resources
+}
+
+class Resources {
+    + Uid: string
+    + Metal: int64
+    + Crystal: int64
+    + Deuterium: int64
+}
+
+class Fleet {
+    + LightFighter: int64
+    + HeavyFighter: int64
+    + Cruiser: int64
+    + Battleship: int64
+    + Battlecruiser: int64
+    + Destroyer: int64
+    + Bomber: int64
+    + Deathstar: int64
+    + SmallCargo: int64
+    + LargeCargo: int64
+    + ColonyShip: int64
+    + Probe: int64
+    + Recycler: int64
+}
+@enduml

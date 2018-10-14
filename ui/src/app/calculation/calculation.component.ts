@@ -31,6 +31,7 @@ export class CalculationComponent implements OnInit {
   public participants: Participant[] = [];
 
   public apiKey: string;
+  public newParticipantName: string;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -48,6 +49,19 @@ export class CalculationComponent implements OnInit {
     });
   }
 
+  addParticipant() {
+    if (this.newParticipantName.length > 0) {
+      this.api.addParticipant(this.calculationID, this.newParticipantName).subscribe(e => {
+        this.getCalculation();
+        this.newParticipantName = '';
+        alert('Teilnehmer wurde Hinzugefügt!');
+      }, err => {
+        console.log(err);
+        alert('Der Teilnehmer konnte nicht angelegt werden.');
+      });
+    }
+  }
+
   getCalculation() {
     this.api.fetchCalculation(this.calculationID).subscribe(e => {
       this.calculation = e;
@@ -58,7 +72,7 @@ export class CalculationComponent implements OnInit {
     });
   }
 
-  requestCallculationUpdate() {
+  requestCalculationUpdate() {
     if (this.calculation != null) {
       this.getCalculation();
     }

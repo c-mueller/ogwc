@@ -28,19 +28,45 @@ export class ApiService {
   constructor(private http: HttpClient) {
   }
 
-  updateWinDistributionModeToPercentage(id: string, name: string, percentage: number) {
+  addParticipant(id: string, name: string) {
     return this.http.post(environment.applicationEndpoint +
-      'api/v1/calculation/' + id + '/participant/win/percentage?name=' + name + '&percentage=' + percentage, null);
+      'api/v1/calculation/' + id + '/participant/add?name=' + name, null);
+  }
+
+  deleteParticipant(id: string, name: string) {
+    return this.http.post(environment.applicationEndpoint +
+      'api/v1/calculation/' + id + '/participant/delete', null, {
+      params: {
+        'name': name,
+      }
+    });
+  }
+
+  updateWinDistributionModeToPercentage(id: string, name: string, percentage: number) {
+    return this.http.post(environment.applicationEndpoint + 'api/v1/calculation/' + id + '/participant/win/percentage', null, {
+      params: {
+        'name': name,
+        'percentage': percentage.toString(10)
+      }
+    });
   }
 
   updateWinDistributionModeToFixedAmount(id: string, name: string, amount: Resources) {
     return this.http.post(environment.applicationEndpoint +
-      'api/v1/calculation/' + id + '/participant/win/fixed?name=' + name, amount);
+      'api/v1/calculation/' + id + '/participant/win/fixed', amount, {
+      params: {
+        'name': name
+      }
+    });
   }
 
   updateWinDistributionModeTonone(id: string, name: string) {
     return this.http.post(environment.applicationEndpoint +
-      'api/v1/calculation/' + id + '/participant/win/none?name=' + name, null);
+      'api/v1/calculation/' + id + '/participant/win/none', null, {
+      params: {
+        'name': name
+      }
+    });
   }
 
   addApiKey(key: string, id: string) {

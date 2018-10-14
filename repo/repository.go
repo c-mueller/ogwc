@@ -27,8 +27,11 @@ type Repository struct {
 	client  *redis.Client
 }
 
-func (r *Repository) Connect() {
+func (r *Repository) Connect() error {
 	r.client = redis.NewClient(&r.Options)
+
+	cmd := r.client.Ping()
+	return cmd.Err()
 }
 
 func (r *Repository) Insert(calculation core.CombatReportCalculation) string {

@@ -16,13 +16,30 @@
 
 package core
 
-func (p *Participant) AddFleetLoss(f Fleet) {
+func (p *Participant) AddFleetLoss(fleet Fleet) {
 	if p.AdditionalLosses == nil {
-		p.AdditionalLosses = &f
+		p.AdditionalLosses = &fleet
 	} else {
-		r := p.AdditionalLosses.Add(f)
+		r := p.AdditionalLosses.Add(fleet)
 		p.AdditionalLosses = &r
 	}
+}
+
+func (p *Participant) SetFleetLoss(fleet Fleet) {
+	p.AdditionalLosses = &fleet
+}
+
+func (p *Participant) AddResourceLoss(ressources Resources) {
+	if p.AdditionalResourceLosses == nil {
+		p.AdditionalResourceLosses = &ressources
+	} else {
+		r := p.AdditionalResourceLosses.Add(ressources)
+		p.AdditionalResourceLosses = &r
+	}
+}
+
+func (p *Participant) SetResourceLoss(resources Resources) {
+	p.AdditionalResourceLosses = &resources
 }
 
 func (p ParticipantList) Find(name string) (int, *Participant) {

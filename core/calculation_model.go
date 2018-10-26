@@ -65,9 +65,10 @@ type ResourcesMap map[string]Resources
 type ParticipantList []Participant
 
 type Participant struct {
-	Name                string           `json:"name"`
-	DistribuitonMode    DistributionMode `json:"distribuiton_mode"`
-	WinPercentage       float64          `json:"win_percentage"`
-	FixedResourceAmount *Resources       `json:"fixed_resource_amount"`
-	AdditionalLosses    *Fleet           `json:"additional_losses"`
+	Name                     string           `json:"name"`
+	DistribuitonMode         DistributionMode `json:"distribuiton_mode"`
+	WinPercentage            float64          `json:"win_percentage"`
+	FixedResourceAmount      *Resources       `json:"fixed_resource_amount"`
+	AdditionalLosses         *Fleet           `json:"additional_losses"`
+	AdditionalResourceLosses *Resources       `json:"additional_resource_losses"`
 }

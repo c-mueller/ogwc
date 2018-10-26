@@ -28,6 +28,11 @@ type additionalFleetLossRequest struct {
 	LostFleet core.Fleet `json:"lost_fleet"`
 }
 
+type additionalResourceLossRequest struct {
+	Name          string         `json:"name"`
+	LostResources core.Resources `json:"lost_resources"`
+}
+
 func (a *OGWCApplication) rebalancePercentage(ctx *gin.Context) {
 	id, calc := a.getCalculationFromContext(ctx)
 	if calc == nil {
@@ -37,10 +42,6 @@ func (a *OGWCApplication) rebalancePercentage(ctx *gin.Context) {
 	calc.RebalanceDistributionPercentage()
 
 	a.updateWithErrorHandling(id, calc, ctx)
-}
-
-func (a *OGWCApplication) addResourceLoss(ctx *gin.Context) {
-
 }
 
 func (a *OGWCApplication) updateWinPercentageOfParticipant(ctx *gin.Context) {
@@ -182,7 +183,7 @@ func (a *OGWCApplication) addParticipant(ctx *gin.Context) {
 	a.updateWithErrorHandling(id, calc, ctx)
 }
 
-func (a *OGWCApplication) addAdditionalFleetLoss(ctx *gin.Context) {
+func (a *OGWCApplication) updateAdditionalFleetLoss(ctx *gin.Context) {
 	var requestData additionalFleetLossRequest
 
 	if err := ctx.BindJSON(&requestData); err != nil {
@@ -205,7 +206,37 @@ func (a *OGWCApplication) addAdditionalFleetLoss(ctx *gin.Context) {
 		return
 	}
 
-	participant.AddFleetLoss(requestData.LostFleet)
+	participant.SetFleetLoss(requestData.LostFleet)
+
+	calc.Participants[idx] = *participant
+
+	a.updateWithErrorHandling(id, calc, ctx)
+}
+
+func (a *OGWCApplication) updateAdditionalResourceLoss(ctx *gin.Context) {
+	var requestData additionalResourceLossRequest
+
+	if err := ctx.BindJSON(&requestData); err != nil {
+		log.Error(err.Error())
+		return
+	}
+
+	id, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	idx, participant := calc.Participants.Find(requestData.Name)
+
+	if participant == nil {
+		ctx.JSON(404, errorResponse{
+			Code:    404,
+			Message: fmt.Sprintf("Participant with name %q not found", requestData.Name),
+		})
+		return
+	}
+
+	participant.SetResourceLoss(requestData.LostResources)
 
 	calc.Participants[idx] = *participant
 

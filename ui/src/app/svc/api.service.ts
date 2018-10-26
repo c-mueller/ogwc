@@ -30,7 +30,7 @@ export class ApiService {
 
   updateAdditionalFleetLoss(calcID: string, name: string, fleet: Fleet) {
     return this.http.post(environment.applicationEndpoint +
-      'api/v1/calculation/' + calcID + '/participant/add-loss', {
+      'api/v1/calculation/' + calcID + '/participant/fleet-loss', {
       'name': name,
       'lost_fleet': fleet
     }, {});

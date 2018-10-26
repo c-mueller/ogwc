@@ -74,8 +74,8 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 
 	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
 
-	a.engine.POST("/api/v1/calculation/:id/participant/add-loss", a.addAdditionalFleetLoss)
-	a.engine.POST("/api/v1/calculation/:id/participant/add-resource-loss", a.addResourceLoss)
+	a.engine.POST("/api/v1/calculation/:id/participant/fleet-loss", a.updateAdditionalFleetLoss)
+	a.engine.POST("/api/v1/calculation/:id/participant/resource-loss", a.updateAdditionalResourceLoss)
 	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addParticipant)
 	a.engine.POST("/api/v1/calculation/:id/participant/delete", a.deleteParticipant)
 

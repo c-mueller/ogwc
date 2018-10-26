@@ -60,6 +60,9 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 		}
 
 		loss = loss.Add(c.Losses[participant.Name].ToResources())
+		if participant.AdditionalResourceLosses != nil {
+			loss = loss.Add(*participant.AdditionalResourceLosses)
+		}
 
 		fleetLoss = fleetLoss.Add(c.Losses[participant.Name])
 

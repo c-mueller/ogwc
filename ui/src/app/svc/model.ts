@@ -26,6 +26,7 @@ export interface CalculationReport {
   win_per_participant: Map<string, Resources>;
   balance_per_participant: Map<string, Resources>;
   claimed_per_participant: Map<string, Resources>;
+  fleet_loss_per_participant: Map<string, Fleet>;
 }
 
 export interface SubmissionResponse {

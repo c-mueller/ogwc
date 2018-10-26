@@ -20,6 +20,15 @@
 
   <div class="card spacer">
     <div class="card-body">
+      <h5 class="card-title">Flottenverluste</h5>
+      <app-fleet-loss-table [data]="report.fleet_loss_per_participant"></app-fleet-loss-table>
+    </div>
+  </div>
+
+  <div class=""></div>
+
+  <div class="card spacer">
+    <div class="card-body">
       <h5 class="card-title">Allgemein</h5>
       <app-resource-table row-name="" [table]="getCommonMap()"></app-resource-table>
     </div>

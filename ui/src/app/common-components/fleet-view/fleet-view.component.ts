@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Fleet} from '../../svc/model';
 import {fleetKeys, fleetNames, FleetNames} from '../../svc/constants';
 
@@ -25,19 +25,38 @@ import {fleetKeys, fleetNames, FleetNames} from '../../svc/constants';
 })
 export class FleetViewComponent implements OnInit {
 
+  @Input('heading')
+  public heading: string;
+
   @Input('fleet')
   public fleet: Fleet;
 
+  @Input('edit')
+  public edit = false;
+
+  @Output('onedit')
+  public editEmitter: EventEmitter<Fleet> = new EventEmitter<Fleet>();
+
   public names: FleetNames = fleetNames;
+
+  public editActive = false;
+
+  public editFleet: Fleet;
 
   getKeys(): string[] {
     return fleetKeys;
+  }
+
+  onFleetUpdate() {
+    this.editActive = false;
+    this.editEmitter.emit(this.editFleet);
   }
 
   constructor() {
   }
 
   ngOnInit() {
+    this.editFleet = this.fleet;
   }
 
 }

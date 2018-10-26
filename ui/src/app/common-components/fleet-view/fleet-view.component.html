@@ -15,11 +15,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<div>
-  <table style="width: 100%">
-    <tr *ngFor="let key of getKeys()">
-      <td style="width: 50%">{{names[key]}}</td>
-      <td style="width: 50%">{{fleet[key].toLocaleString("de")}}</td>
-    </tr>
-  </table>
+<div class="card">
+  <div class="card-body">
+    <div class="card-title">
+      <h5>{{heading}}
+        <div *ngIf="edit" class="float-md-right">
+          <button *ngIf="!editActive" class="btn" (click)="editActive = true">Bearbeiten</button>
+          <button *ngIf="editActive" class="btn" (click)="onFleetUpdate()">Speichern</button>
+        </div>
+      </h5>
+    </div>
+
+    <table style="width: 100%">
+      <tr *ngFor="let key of getKeys()">
+        <td style="width: 50%">{{names[key]}}</td>
+        <td *ngIf="!editActive" style="width: 50%">{{fleet[key].toLocaleString("de")}}</td>
+        <td *ngIf="editActive" style="width: 50%">
+          <input type="number" class="form-control" lang="de-DE" step="" placeholder="{{names[key]}}"
+                 aria-label="" [(ngModel)]="editFleet[key]">
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

@@ -16,7 +16,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CalculationResponse, Fleet, Participant, Resources} from '../../svc/model';
-import {winDistributionModes, zeroFleet} from '../../svc/constants';
+import {fleetKeys, winDistributionModes, zeroFleet} from '../../svc/constants';
 import {ApiService} from '../../svc/api.service';
 
 @Component({
@@ -79,6 +79,19 @@ export class ParticipantListElementComponent implements OnInit {
     this.winDistributionMode = mode;
   }
 
+  getAdditionalFleetLoss() {
+    if (this.participant.additional_losses == null) {
+      const f: Fleet = {};
+
+      for (const key of fleetKeys) {
+        f[key] = 0;
+      }
+
+      return f;
+    }
+    return this.participant.additional_losses;
+  }
+
   ngOnInit() {
     this.winDistributionMode = this.participant.distribuiton_mode;
     if (this.participant.fixed_resource_amount != null) {
@@ -116,6 +129,15 @@ export class ParticipantListElementComponent implements OnInit {
         this.onWinUpdateFail();
       });
     }
+  }
+
+  updateAdditionalLoss(f: Fleet) {
+    this.participant.additional_losses = f;
+    this.api.updateAdditionalFleetLoss(this.calculationID, this.playerName, f).subscribe(e => {
+      alert('Flottenverluste Aktualisiert');
+    }, e => {
+      alert('Fehler beim Aktuallisieren der Flottenverluste');
+    });
   }
 
   onWinUpdateSuccess() {

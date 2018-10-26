@@ -16,7 +16,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {CalculationReport, CalculationResponse, Resources, SubmissionResponse} from './model';
+import {CalculationReport, CalculationResponse, Fleet, Resources, SubmissionResponse} from './model';
 import {environment} from '../../environments/environment';
 import {resource} from 'selenium-webdriver/http';
 
@@ -26,6 +26,14 @@ import {resource} from 'selenium-webdriver/http';
 export class ApiService {
 
   constructor(private http: HttpClient) {
+  }
+
+  updateAdditionalFleetLoss(calcID: string, name: string, fleet: Fleet) {
+    return this.http.post(environment.applicationEndpoint +
+      'api/v1/calculation/' + calcID + '/participant/add-loss', {
+      'name': name,
+      'lost_fleet': fleet
+    }, {});
   }
 
   addParticipant(id: string, name: string) {

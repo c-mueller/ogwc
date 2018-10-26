@@ -1,6 +1,7 @@
 .idea/
 out.json
 !vendor/github.com/**
+!vendor/**
 rice-box.go
 build/
 app-ui/

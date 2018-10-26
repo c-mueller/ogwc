@@ -24,6 +24,12 @@ import (
 	"os"
 )
 
+// Build Params
+var IsDev = true
+var Revision string
+var BuildTimestamp string
+var BuildContext string
+
 var (
 	serverCmd = kingpin.Command("server", "Launch the OGWC server Application")
 
@@ -49,6 +55,8 @@ func init() {
 }
 
 func main() {
+	log.Infof("Running revision %q built at %s on %s", Revision, BuildTimestamp, BuildContext)
+
 	switch cmd {
 	case "server":
 		log.Info("Launching OGWC server...")

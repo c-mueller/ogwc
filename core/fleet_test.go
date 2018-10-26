@@ -49,7 +49,7 @@ func Test_ToResources(t *testing.T) {
 
 	value := a.ToResources()
 
-	assert.Equal(t, uint(5080000000), value.Metal)
-	assert.Equal(t, uint(4070000000), value.Crystal)
-	assert.Equal(t, uint(1025000000), value.Deuterium)
+	assert.Equal(t, int(5080000000), value.Metal)
+	assert.Equal(t, int(4070000000), value.Crystal)
+	assert.Equal(t, int(1025000000), value.Deuterium)
 }

@@ -6,7 +6,8 @@ pipeline:
   build_ui:
     image: johnpapa/angular-cli:latest
     commands:
-      - "apk add --update fish"
+      - apk add --update fish
+      - cd ui && npm install && cd ..
       - ./build_frontend.fish
   build:
     image: golang:latest
@@ -21,13 +22,13 @@ pipeline:
     # Build application
     - ./build_backend.fish
   test:
-    image: golang:${GO_VERSION}
+    image: golang:latest
     commands:
     - go test -v -cover ./...
   cloc_report:
     image: halive/git-cloc:latest
     commands:
-    - cloc $(git ls-files)
+    - cloc $(git ls-files | grep -v vendor)
   github_release:
     image: plugins/github-release
     secrets: [ github_token ]

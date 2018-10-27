@@ -45,6 +45,15 @@ func (a *OGWCApplication) getCalculation(ctx *gin.Context) {
 	ctx.JSON(200, calc)
 }
 
+func (a *OGWCApplication) getTransfers(ctx *gin.Context) {
+	_, calc := a.getCalculationFromContext(ctx)
+	if calc == nil {
+		return
+	}
+
+	ctx.JSON(200, calc.GetReport().GetResourceTransfers())
+}
+
 func (a *OGWCApplication) newCalculation(ctx *gin.Context) {
 	param := ctx.Param("key")
 	if !crRegex.Match([]byte(param)) {
@@ -68,9 +77,9 @@ func (a *OGWCApplication) newCalculation(ctx *gin.Context) {
 	uid := a.repo.Insert(*calculation)
 
 	ctx.JSON(201, calculationCreationResponse{
-		Code:           201,
-		CalculationID:  uid,
+		Code:          201,
+		CalculationID: uid,
 		// TODO Implement proper scheme detection
-		CalculationURL: fmt.Sprintf("http://%s/api/v1/calculation/%s",  ctx.Request.Host, uid),
+		CalculationURL: fmt.Sprintf("http://%s/api/v1/calculation/%s", ctx.Request.Host, uid),
 	})
 }

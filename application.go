@@ -71,6 +71,7 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 
 	a.engine.GET("/api/v1/calculation/:id", a.getCalculation)
 	a.engine.GET("/api/v1/calculation/:id/report", a.getReport)
+	a.engine.GET("/api/v1/calculation/:id/report/transfers",a.getTransfers)
 
 	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
 

@@ -22,6 +22,14 @@ type Resources struct {
 	Deuterium int `json:"deuterium"`
 }
 
+func (r Resources) IsZeroWithTolerance() bool {
+	v := r.Metal >= -100 && r.Metal <= 100
+	v = v && r.Crystal >= -100 && r.Crystal <= 100
+	v = v && r.Deuterium >= -100 && r.Deuterium <= 100
+
+	return v
+}
+
 func (r Resources) Add(b Resources) Resources {
 	return Resources{
 		Metal:     r.Metal + b.Metal,
@@ -45,6 +53,7 @@ func (r Resources) MulF(x float64) Resources {
 		Deuterium: int(float64(r.Deuterium) * x),
 	}
 }
+
 func (r Resources) Sub(b Resources) Resources {
 	return Resources{
 		Metal:     r.Metal - b.Metal,

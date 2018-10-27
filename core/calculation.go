@@ -140,6 +140,20 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 	}
 }
 
+func (c CalculationResponse) GetResourceTransfers() []Transfer {
+	b := make(Balances, 0)
+
+	for k, v := range c.BalancePerParticipant {
+		b = append(b, PlayerBalance{
+			Rank:    0,
+			Name:    k,
+			Balance: v,
+		})
+	}
+
+	return b.GetTransferForBalancingRandomized(200)
+}
+
 func (c *CombatReportCalculation) AddParticipant(p Participant) {
 	//TODO Implement checking for valid Distribution Percentage
 	if !c.Participants.IsPresent(p.Name) {

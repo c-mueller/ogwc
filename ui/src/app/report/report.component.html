@@ -84,6 +84,11 @@
       <app-resource-table [table]="report.balance_per_participant"></app-resource-table>
     </div>
   </div>
+
+  <div class="spacer">
+    <app-transfers-table [calulationID]="calculationID"></app-transfers-table>
+  </div>
+
   <div class="card spacer">
     <div class="card-body">
       <h5 class="card-title">Shortlink zum Report</h5>
@@ -93,6 +98,7 @@
       </p>
     </div>
   </div>
+
 
   <button class="btn btn-lg btn-block btn-outline-danger" (click)="navigateToCalculation()">Berechnung anpassen</button>
 </div>

@@ -35,6 +35,7 @@ import {FleetViewComponent} from './common-components/fleet-view/fleet-view.comp
 import {ResourceTableComponent} from './common-components/resource-table/resource-table.component';
 import {ClipboardModule} from 'ngx-clipboard';
 import { FleetLossTableComponent } from './common-components/fleet-loss-table/fleet-loss-table.component';
+import { TransfersTableComponent } from './report/transfers-table/transfers-table.component';
 
 const appRoutes: Routes = [
   {path: 'start', component: StartComponent},
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
     ResourceViewComponent,
     FleetViewComponent,
     ResourceTableComponent,
-    FleetLossTableComponent
+    FleetLossTableComponent,
+    TransfersTableComponent
   ],
   imports: [
     BrowserModule,

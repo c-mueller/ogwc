@@ -29,6 +29,12 @@ export interface CalculationReport {
   fleet_loss_per_participant: Map<string, Fleet>;
 }
 
+export interface ResourceTransfer {
+  from: string;
+  to: string;
+  amount: Resources;
+}
+
 export interface SubmissionResponse {
   code: number;
   calculation_id: string;

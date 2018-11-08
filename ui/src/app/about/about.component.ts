@@ -15,6 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import { Component, OnInit } from '@angular/core';
+import {ApiService} from '../svc/api.service';
+import {VersionInfo} from '../svc/model';
 
 @Component({
   selector: 'app-about',
@@ -23,9 +25,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutComponent implements OnInit {
 
-  constructor() { }
+  public version: VersionInfo = null;
+
+  constructor(private api: ApiService) { }
 
   ngOnInit() {
+    this.api.fetchVersionInfo().subscribe(e => {
+      this.version = e;
+    });
   }
 
 }

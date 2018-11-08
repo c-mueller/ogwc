@@ -16,7 +16,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {CalculationReport, CalculationResponse, Fleet, Resources, ResourceTransfer, SubmissionResponse} from './model';
+import {CalculationReport, CalculationResponse, Fleet, Resources, ResourceTransfer, SubmissionResponse, VersionInfo} from './model';
 import {environment} from '../../environments/environment';
 import {resource} from 'selenium-webdriver/http';
 
@@ -95,5 +95,8 @@ export class ApiService {
 
   fetchTransfers(id: string) {
     return this.http.get<ResourceTransfer[]>(environment.applicationEndpoint + 'api/v1/calculation/' + id + '/report/transfers');
+  }
+  fetchVersionInfo() {
+    return this.http.get<VersionInfo>(environment.applicationEndpoint + 'api/v1/version');
   }
 }

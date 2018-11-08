@@ -33,9 +33,15 @@
       </p>
     </div>
   </div>
-  <div class="card" style="margin-bottom: 2%">
+  <div *ngIf="version != null" class="card" style="margin-bottom: 2%">
     <div class="card-body">
-      <h5 class="card-title">Verwendete APIs und Drittbibliotheken</h5>
+      <h5 class="card-title">Versionsinformationen</h5>
+      <ul>
+        <li>Version: {{version.version}}.{{version.build_revision}}</li>
+        <li>UI-Version: {{version.frontend_hashsum.substring(0,16)}}</li>
+        <li>Build-Context: {{version.build_context}}</li>
+        <li>Build-Zeitstempel: {{version.build_timestamp}}</li>
+      </ul>
     </div>
   </div>
   <div class="card">

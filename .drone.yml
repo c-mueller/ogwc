@@ -33,9 +33,14 @@ pipeline:
     image: plugins/github-release
     secrets: [ github_token ]
     files:
-      - build/ogwd
+      - build/ogwc
     checksum:
     - sha256
     - sha512
     when:
       event: tag
+
+services:
+  redis:
+    image: redis:latest
+

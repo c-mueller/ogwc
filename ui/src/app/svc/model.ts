@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+export interface VersionInfo {
+  build_context: string;
+  build_timestamp: string;
+  build_revision: string;
+  version: string;
+  frontend_hashsum: string;
+}
+
 export interface CalculationReport {
   total_loss: Resources;
   total_income: Resources;

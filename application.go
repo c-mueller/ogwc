@@ -17,6 +17,8 @@
 package ogwc
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"github.com/GeertJohan/go.rice"
 	"github.com/c-mueller/ogwc/core"
 	"github.com/c-mueller/ogwc/repo"
@@ -40,6 +42,47 @@ type OGWCApplication struct {
 	engine       *gin.Engine
 	api          core.OGameAPI
 	UserAccounts []MetricsUserAccount
+	versionInfo  VersionInfo
+}
+
+type VersionInfo struct {
+	BuildContext    string `json:"build_context"`
+	BuildTimestamp  string `json:"build_timestamp"`
+	Revision        string `json:"build_revision"`
+	Version         string `json:"version"`
+	FrontendHashsum string `json:"frontend_hashsum"`
+}
+
+func (a *OGWCApplication) InitVersionInfo(ctx, rev, ver, ts string) {
+	a.versionInfo.BuildContext = ctx
+	a.versionInfo.Revision = rev
+	a.versionInfo.Version = ver
+	a.versionInfo.BuildTimestamp = ts
+
+	ui, err := rice.FindBox("app-ui")
+	if err != nil {
+		a.versionInfo.FrontendHashsum = "DEV-VERSION"
+		return
+	}
+
+	h := sha256.New()
+
+	ui.Walk("/", func(path string, info os.FileInfo, err error) error {
+		if !info.IsDir() {
+			data, err := ui.Bytes(path)
+			if err != nil {
+				return err
+			}
+			h.Write(data)
+		}
+
+		return nil
+	})
+
+	hashsum := make([]byte, 0)
+
+	hashsum = h.Sum(hashsum)
+	a.versionInfo.FrontendHashsum = hex.EncodeToString(hashsum)
 }
 
 func (a *OGWCApplication) Init(c *redis.Options) error {
@@ -67,26 +110,35 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 		log.Warning("This is a Development Binary. This Means the WebApplication is not available on <URL>/ui")
 	}
 
-	a.engine.POST("/api/v1/submit/:key", a.newCalculation)
+	v1Api := a.engine.Group("/api/v1")
 
-	a.engine.GET("/api/v1/calculation/:id", a.getCalculation)
-	a.engine.GET("/api/v1/calculation/:id/report", a.getReport)
-	a.engine.GET("/api/v1/calculation/:id/report/transfers",a.getTransfers)
+	v1Api.GET("/version", a.getVersionInfo)
 
-	a.engine.POST("/api/v1/calculation/:id/add/:key", a.addKey)
+	v1Api.POST("/submit/:key", a.newCalculation)
 
-	a.engine.POST("/api/v1/calculation/:id/participant/fleet-loss", a.updateAdditionalFleetLoss)
-	a.engine.POST("/api/v1/calculation/:id/participant/resource-loss", a.updateAdditionalResourceLoss)
-	a.engine.POST("/api/v1/calculation/:id/participant/add", a.addParticipant)
-	a.engine.POST("/api/v1/calculation/:id/participant/delete", a.deleteParticipant)
+	v1Api.GET("/calculation/:id", a.getCalculation)
+	v1Api.GET("/calculation/:id/report", a.getReport)
+	v1Api.GET("/calculation/:id/report/transfers", a.getTransfers)
 
-	a.engine.POST("/api/v1/calculation/:id/participant/win/percentage", a.updateWinPercentageOfParticipant)
-	a.engine.POST("/api/v1/calculation/:id/participant/win/fixed", a.updateFixedWinOfParticipant)
-	a.engine.POST("/api/v1/calculation/:id/participant/win/none", a.updateDisableWinOfParticipant)
+	v1Api.POST("/calculation/:id/add/:key", a.addKey)
 
-	a.engine.POST("/api/v1/calculation/:id/rebalance-win", a.rebalancePercentage)
+	v1ParticipantApi := v1Api.Group("/calculation/:id/participant")
+
+	v1ParticipantApi.POST("/fleet-loss", a.updateAdditionalFleetLoss)
+	v1ParticipantApi.POST("/resource-loss", a.updateAdditionalResourceLoss)
+	v1ParticipantApi.POST("/add", a.addParticipant)
+	v1ParticipantApi.POST("/delete", a.deleteParticipant)
+	v1ParticipantApi.POST("/win/percentage", a.updateWinPercentageOfParticipant)
+	v1ParticipantApi.POST("/win/fixed", a.updateFixedWinOfParticipant)
+	v1ParticipantApi.POST("/win/none", a.updateDisableWinOfParticipant)
+
+	v1Api.POST("/calculation/:id/rebalance-win", a.rebalancePercentage)
 
 	return nil
+}
+
+func (a *OGWCApplication) getVersionInfo(ctx *gin.Context) {
+	ctx.JSON(200, a.versionInfo)
 }
 
 func (a *OGWCApplication) redirectToUi(ctx *gin.Context) {

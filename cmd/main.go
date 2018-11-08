@@ -26,6 +26,7 @@ import (
 
 // Build Params
 var IsDev = true
+var Version = "master"
 var Revision string
 var BuildTimestamp string
 var BuildContext string
@@ -61,6 +62,7 @@ func main() {
 	case "server":
 		log.Info("Launching OGWC server...")
 		app := ogwc.OGWCApplication{}
+		app.InitVersionInfo(BuildContext, Revision, Version, BuildTimestamp)
 		app.Init(&redis.Options{
 			Addr:     *redisAddr,
 			DB:       *redisDb,

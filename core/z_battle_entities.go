@@ -20,7 +20,6 @@ package core
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/GeertJohan/go.rice"
 )
 
@@ -36,8 +35,6 @@ func init() {
 
 	json.Unmarshal(data, &Entities)
 	json.Unmarshal(ipmData, &IPMCost)
-
-	fmt.Println(IPMCost)
 }
 
 type EntityType struct {

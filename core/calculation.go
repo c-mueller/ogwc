@@ -42,7 +42,6 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 	winPerPlayer := make(ResourcesMap)
 
 	claimedPerPlayer := make(ResourcesMap)
-	claimedPerPlayerWithoutRebalancing := make(ResourcesMap)
 	balancePerPlayer := make(ResourcesMap)
 
 	totalLosses := Resources{}
@@ -109,10 +108,16 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 	}
 
 	totalWin := totalIncome.Sub(totalLosses)
+	totalWinUnbalanced := totalWin.Add(Resources{})
+
+	enableRebalancer := c.DeuteriumBalancerActive && totalWin.Deuterium < 0
+
+	// Todo find out where to put this calculation
+	if enableRebalancer && false {
+		totalWin = c.RebalancerConfig.Balance(totalWin)
+	}
 
 	totalWinNoFixed := totalWin.Add(Resources{})
-
-	enableRebalancer := totalWinNoFixed.Deuterium < 0
 
 	for _, p := range participantsByDistibutionType[FIXED_AMOUNT] {
 		if p.FixedResourceAmount == nil {
@@ -135,27 +140,23 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 
 	for _, p := range c.Participants {
 		claimedPerPlayer[p.Name] = lossesPerPlayer[p.Name].Add(winPerPlayer[p.Name])
-		claimedPerPlayerWithoutRebalancing[p.Name] = claimedPerPlayer[p.Name]
-		if c.DeuteriumBalancerActive {
-			claimedPerPlayer[p.Name] = c.RebalancerConfig.Balance(claimedPerPlayer[p.Name])
-		}
 
 		balancePerPlayer[p.Name] = incomePerPlayer[p.Name].Sub(claimedPerPlayer[p.Name])
 	}
 
 	return CalculationResponse{
-		TotalIncome:                        totalIncome,
-		TotalLoss:                          totalLosses,
-		TotalWin:                           totalWin,
-		WinPerParticipant:                  winPerPlayer,
-		LossPerParticipant:                 lossesPerPlayer,
-		IncomePerParticipant:               incomePerPlayer,
-		ClaimedPerParticipant:              claimedPerPlayer,
-		ClaimedPerParticipantNotRebalanced: claimedPerPlayerWithoutRebalancing,
-		BalancePerParticipant:              balancePerPlayer,
-		HarvestedPerParticipant:            harvestedPerPlayer,
-		LootPerParticipant:                 lootPerPlayer,
-		FleetLossPerParticipant:            fleetLossPerPlayer,
+		TotalIncome:             totalIncome,
+		TotalLoss:               totalLosses,
+		TotalWin:                totalWin,
+		TotalWinNoRebalancing:   totalWinUnbalanced,
+		WinPerParticipant:       winPerPlayer,
+		LossPerParticipant:      lossesPerPlayer,
+		IncomePerParticipant:    incomePerPlayer,
+		ClaimedPerParticipant:   claimedPerPlayer,
+		BalancePerParticipant:   balancePerPlayer,
+		HarvestedPerParticipant: harvestedPerPlayer,
+		LootPerParticipant:      lootPerPlayer,
+		FleetLossPerParticipant: fleetLossPerPlayer,
 	}
 }
 
@@ -230,6 +231,11 @@ func (c *CombatReportCalculation) RebalanceDistributionPercentage() {
 }
 
 func (c *CombatReportCalculation) AddHarvestReport(h HarvestReport) {
+	if c.HarvestReports == nil {
+		c.HarvestReports = make(RessourceSliceMap)
+	}
+
+
 	m := c.HarvestReports[h.Generic.OwnerName]
 	if m == nil {
 		m = make([]Resources, 0)
@@ -248,6 +254,10 @@ func (c *CombatReportCalculation) AddHarvestReport(h HarvestReport) {
 }
 
 func (c *CombatReportCalculation) AddMissileReport(m MissileReport) {
+	if c.MissileReports == nil {
+		c.MissileReports = make(RessourceSliceMap)
+	}
+
 	mrs := c.MissileReports[m.Generic.AttackerName]
 	if mrs == nil {
 		mrs = make([]Resources, 0)
@@ -255,5 +265,14 @@ func (c *CombatReportCalculation) AddMissileReport(m MissileReport) {
 
 	mrs = append(mrs, m.GetLosses(c.Attacker))
 
+	c.MissileReports[m.Generic.AttackerName] = mrs
+
 	c.RawReports.MissileReports = append(c.RawReports.MissileReports, m)
+
+	if !c.Participants.IsPresent(m.Generic.AttackerName) {
+		c.Participants = append(c.Participants, Participant{
+			Name:             m.Generic.AttackerName,
+			DistribuitonMode: NONE,
+		})
+	}
 }

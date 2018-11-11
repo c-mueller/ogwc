@@ -36,6 +36,8 @@ func Test_ToReportCalculation(t *testing.T) {
 	h2 := parseSampleHR_2(t)
 	h3 := parseSampleHR_3(t)
 
+	mr := parseSampleMR(t)
+
 	calc.AddHarvestReport(h1)
 	calc.AddHarvestReport(h2)
 	calc.AddHarvestReport(h3)
@@ -43,8 +45,12 @@ func Test_ToReportCalculation(t *testing.T) {
 	calc.AddCombatReport(cr2, true)
 	calc.AddCombatReport(cr3, true)
 
+	calc.AddMissileReport(mr)
+	calc.AddMissileReport(mr)
+	calc.AddMissileReport(mr)
+
 	calc.AddAdditionalLossForParticipant("Chris", Fleet{
-		Deathstar: 52,
+		Deathstar: 120,
 	})
 	calc.AddAdditionalLossForParticipant("Who", Fleet{
 		Deathstar: 32,
@@ -178,6 +184,22 @@ func parseSampleHR_3(t *testing.T) HarvestReport {
 	assert.NoError(t, err)
 
 	var cr HarvestReport
+
+	err = json.Unmarshal(data, &cr)
+	assert.NoError(t, err)
+
+	return cr
+}
+
+func parseSampleMR(t *testing.T) MissileReport {
+	f, err := os.Open("testdata/missile_report_1.json")
+	assert.NoError(t, err)
+	defer f.Close()
+
+	data, err := ioutil.ReadAll(f)
+	assert.NoError(t, err)
+
+	var cr MissileReport
 
 	err = json.Unmarshal(data, &cr)
 	assert.NoError(t, err)

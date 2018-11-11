@@ -56,9 +56,10 @@ type RawReports struct {
 }
 
 type CalculationResponse struct {
-	TotalLoss   Resources `json:"total_loss"`
-	TotalIncome Resources `json:"total_income"`
-	TotalWin    Resources `json:"total_win"`
+	TotalLoss             Resources `json:"total_loss"`
+	TotalIncome           Resources `json:"total_income"`
+	TotalWin              Resources `json:"total_win"`
+	TotalWinNoRebalancing Resources `json:"total_win_no_rebalancing"`
 
 	FleetLossPerParticipant FleetMap `json:"fleet_loss_per_participant"`
 
@@ -68,9 +69,8 @@ type CalculationResponse struct {
 	IncomePerParticipant    ResourcesMap `json:"income_per_participant"`
 	WinPerParticipant       ResourcesMap `json:"win_per_participant"`
 
-	BalancePerParticipant              ResourcesMap `json:"balance_per_participant"`
-	ClaimedPerParticipantNotRebalanced ResourcesMap `json:"claimed_per_participant_not_rebalanced"`
-	ClaimedPerParticipant              ResourcesMap `json:"claimed_per_participant"`
+	BalancePerParticipant ResourcesMap `json:"balance_per_participant"`
+	ClaimedPerParticipant ResourcesMap `json:"claimed_per_participant"`
 }
 
 type Participant struct {

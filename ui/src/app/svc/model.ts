@@ -79,6 +79,7 @@ export interface CalculationResponse {
   total_loot: Resources;
   loot_per_participant: ResourcesArrayMap;
   harvest_reports: ResourcesArrayMap;
+  missile_reports: ResourcesArrayMap;
   initial_fleet_opponent: FleetMap;
   losses_opponent: FleetMap;
 }

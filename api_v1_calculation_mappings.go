@@ -18,6 +18,7 @@ package ogwc
 
 import (
 	"fmt"
+	"github.com/c-mueller/ogwc/core"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,6 +42,9 @@ func (a *OGWCApplication) getCalculation(ctx *gin.Context) {
 	if calc == nil {
 		return
 	}
+
+	// Remove Raw data, to save Bandwidth
+	calc.RawReports = core.RawReports{}
 
 	ctx.JSON(200, calc)
 }

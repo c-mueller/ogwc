@@ -33,10 +33,6 @@ import (
 
 var log = logging.MustGetLogger("application")
 
-func init() {
-	gin.SetMode(gin.ReleaseMode)
-}
-
 type OGWCApplication struct {
 	repo           repo.Repository
 	engine         *gin.Engine
@@ -113,35 +109,9 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 		log.Warning("This is a Development Binary. This Means the WebApplication is not available on <URL>/ui")
 	}
 
-	v1Api := a.engine.Group("/api/v1")
-
-	v1Api.GET("/version", a.getVersionInfo)
-
-	v1Api.POST("/submit/:key", a.newCalculation)
-
-	v1Api.GET("/calculation/:id", a.getCalculation)
-	v1Api.GET("/calculation/:id/report", a.getReport)
-	v1Api.GET("/calculation/:id/report/transfers", a.getTransfers)
-
-	v1Api.POST("/calculation/:id/add/:key", a.addKey)
-
-	v1ParticipantApi := v1Api.Group("/calculation/:id/participant")
-
-	v1ParticipantApi.POST("/fleet-loss", a.updateAdditionalFleetLoss)
-	v1ParticipantApi.POST("/resource-loss", a.updateAdditionalResourceLoss)
-	v1ParticipantApi.POST("/add", a.addParticipant)
-	v1ParticipantApi.POST("/delete", a.deleteParticipant)
-	v1ParticipantApi.POST("/win/percentage", a.updateWinPercentageOfParticipant)
-	v1ParticipantApi.POST("/win/fixed", a.updateFixedWinOfParticipant)
-	v1ParticipantApi.POST("/win/none", a.updateDisableWinOfParticipant)
-
-	v1Api.POST("/calculation/:id/rebalance-win", a.rebalancePercentage)
+	a.registerV1ApiMappings()
 
 	return nil
-}
-
-func (a *OGWCApplication) getVersionInfo(ctx *gin.Context) {
-	ctx.JSON(200, a.versionInfo)
 }
 
 func (a *OGWCApplication) redirectToUi(ctx *gin.Context) {

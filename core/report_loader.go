@@ -31,6 +31,7 @@ func init() {
 type OGameAPI interface {
 	GetCombatReport(key string) (*CombatReport, error)
 	GetHarvestReport(key string) (*HarvestReport, error)
+	GetMissileReport(key string) (*MissileReport, error)
 }
 
 type OGAPIRestAPI struct {
@@ -57,6 +58,28 @@ func (a OGAPIRestAPI) GetCombatReport(key string) (*CombatReport, error) {
 		return nil, err
 	}
 	return &cr, nil
+}
+
+func (a OGAPIRestAPI) GetMissileReport(key string) (*MissileReport, error) {
+	url := fmt.Sprintf(a.QueryURL, key)
+
+	res, err := http.Get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var mr MissileReport
+	err = json.Unmarshal(data, &mr)
+	if err != nil {
+		return nil, err
+	}
+	return &mr, nil
 }
 
 func (OGAPIRestAPI) GetHarvestReport(key string) (*HarvestReport, error) {

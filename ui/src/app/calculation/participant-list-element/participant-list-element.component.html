@@ -33,11 +33,28 @@
                           [fleet]="getLostFleet()"></app-fleet-view>
           <app-fleet-view [edit]="true" heading="Zusätzliche Verluste" (onedit)="updateAdditionalLoss($event)"
                           [fleet]="getAdditionalFleetLoss()"></app-fleet-view>
+
         </div>
 
         <div class="col-md-6">
           <div class="card l-margin">
             <div class="card-body">
+              <h5 class="card-title" style="margin-bottom: 10px">Weitere Verluste</h5>
+              <div
+                *ngIf="calculation.missile_reports != null &&
+                 calculation.missile_reports[playerName] != null &&
+                  calculation.missile_reports[playerName].length > 0">
+                <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Interplanetarraketen</strong></h6>
+                <div *ngFor="let i of calculation.missile_reports[playerName]" style="margin-bottom: 10px;">
+                  <app-resource-view [resource]="i"></app-resource-view>
+                </div>
+              </div>
+              <div *ngIf="calculation.missile_reports == null ||
+                 calculation.missile_reports[playerName] == null ||
+                  calculation.missile_reports[playerName].length == 0">
+                <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Keine weiteren Verluste gefunden!</strong>
+                </h6>
+              </div>
               <h5 class="card-title" style="margin-bottom: 10px">Einnahmen</h5>
               <h6 class="card-subtitle" style="margin-bottom: 10px"><strong>Beute</strong></h6>
               <div *ngFor="let i of calculation.loot_per_participant[playerName]" style="margin-bottom: 10px;">

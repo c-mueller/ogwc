@@ -11,7 +11,7 @@
     "defender_planet_name": "Zeta",
     "defender_planet_coordinates": "5:406:5",
     "defender_planet_type": "1",
-    "missiles_lost_attacker": 1,
+    "missiles_lost_attacker": 50,
     "missiles_lost_defender": 0
   },
   "details": {

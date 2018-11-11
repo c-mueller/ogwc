@@ -19,10 +19,12 @@ package main
 import (
 	"fmt"
 	"github.com/c-mueller/ogwc"
+	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"github.com/op/go-logging"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"os"
+	"strings"
 )
 
 // Build Params
@@ -42,6 +44,10 @@ var (
 	redisDb   = serverCmd.Flag("redis-database", "The index of the redis db to use").Default("0").Int()
 
 	ogameApiUrl = serverCmd.Flag("ogame-api-proxy-url", "The url to the Ogame API Proxy").Default("https://ogapi.rest/v1/report/%s/0").String()
+
+	metricsUsers = serverCmd.Flag("metrics-user", "Add a user for Metrics").Short('u').Strings()
+
+	prodFlag = serverCmd.Flag("prod","Set to true to make Gin run in Production mode").Short('p').Bool()
 
 	versionCmd = kingpin.Command("version", "Show version information")
 
@@ -63,11 +69,40 @@ func init() {
 func main() {
 	switch cmd {
 	case "server":
+		if *prodFlag {
+			gin.SetMode(gin.ReleaseMode)
+		}
+
 		log.Infof("Running revision %q built at %s on %s", Revision, BuildTimestamp, BuildContext)
 		log.Info("Launching OGWC server...")
+
+		accs := make([]ogwc.MetricsUserAccount, 0)
+		for _, us := range *metricsUsers {
+			splitUser := strings.Split(us, ":")
+			if len(splitUser) != 2 {
+				log.Errorf("Invalid Metrics user definition. %q", us)
+				log.Error("Users have to be defined in the following format:")
+				log.Error("<USERNAME>:<PASSWORD>, where USERNAME and Password may\n" +
+					"only consist out of numbers (0-9), upper and lower case letters (a-z and A-Z).")
+				os.Exit(1)
+			}
+			acc := ogwc.MetricsUserAccount{
+				Username: splitUser[0],
+				Password: splitUser[1],
+			}
+
+			log.Infof("Added Metrics account with Username: %q and Password: %q", acc.Username, acc.Password)
+			accs = append(accs, acc)
+		}
+
 		app := ogwc.OGWCApplication{
 			APIUrlTemplate: *ogameApiUrl,
 		}
+
+		if len(accs) > 0 {
+			app.UserAccounts = accs
+		}
+
 		app.InitVersionInfo(BuildContext, Revision, Version, BuildTimestamp)
 		app.Init(&redis.Options{
 			Addr:     *redisAddr,

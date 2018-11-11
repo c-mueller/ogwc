@@ -274,6 +274,17 @@ func (a *OGWCApplication) addKey(ctx *gin.Context) {
 		}
 
 		calc.AddCombatReport(*report, true)
+	} else if mrRegex.Match([]byte(key)) {
+		report, err := a.api.GetMissileReport(key)
+		if err != nil {
+			ctx.JSON(404, errorResponse{
+				Code:    404,
+				Message: fmt.Sprintf("Fetching the API Key %q failed. Error Message: %q", key, err.Error()),
+			})
+			return
+		}
+
+		calc.AddMissileReport(*report)
 	} else {
 		ctx.JSON(400, errorResponse{
 			Code:    400,

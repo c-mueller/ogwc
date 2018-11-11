@@ -16,10 +16,23 @@
 
 package core
 
+import "github.com/google/uuid"
+
 type Resources struct {
 	Metal     int `json:"metal"`
 	Crystal   int `json:"crystal"`
 	Deuterium int `json:"deuterium"`
+}
+
+type IdentifiableResources struct {
+	Resources
+	ID string `json:"id"`
+}
+
+func (r *Resources) ToIdentifiableResources() IdentifiableResources {
+	uid := uuid.New().String()
+
+	return IdentifiableResources{*r, uid}
 }
 
 func (r Resources) IsZeroWithTolerance() bool {

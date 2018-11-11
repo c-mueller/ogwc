@@ -17,6 +17,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/c-mueller/ogwc"
 	"github.com/go-redis/redis"
 	"github.com/op/go-logging"
@@ -40,6 +41,10 @@ var (
 	redisPass = serverCmd.Flag("redis-password", "The password for the redis server").Default("").String()
 	redisDb   = serverCmd.Flag("redis-database", "The index of the redis db to use").Default("0").Int()
 
+	ogameApiUrl = serverCmd.Flag("ogame-api-proxy-url", "The url to the Ogame API Proxy").Default("https://ogapi.rest/v1/report/%s/0").String()
+
+	versionCmd = kingpin.Command("version", "Show version information")
+
 	cmd = ""
 )
 
@@ -56,12 +61,13 @@ func init() {
 }
 
 func main() {
-	log.Infof("Running revision %q built at %s on %s", Revision, BuildTimestamp, BuildContext)
-
 	switch cmd {
 	case "server":
+		log.Infof("Running revision %q built at %s on %s", Revision, BuildTimestamp, BuildContext)
 		log.Info("Launching OGWC server...")
-		app := ogwc.OGWCApplication{}
+		app := ogwc.OGWCApplication{
+			APIUrlTemplate: *ogameApiUrl,
+		}
 		app.InitVersionInfo(BuildContext, Revision, Version, BuildTimestamp)
 		app.Init(&redis.Options{
 			Addr:     *redisAddr,
@@ -69,6 +75,12 @@ func main() {
 			Password: *redisPass,
 		})
 		app.Serve(*bindUrl)
+	case "version":
+		fmt.Printf("OGWC -  OGame Win Calculator\n"+
+			"Version: %s.%s\n"+
+			"UI Revision: %s\n"+
+			"Built on: %s\n"+
+			"Built at: %s\n", Version, Revision, ogwc.GetUIRevision(), BuildContext, BuildTimestamp)
 	}
 }
 

@@ -1,0 +1,21 @@
+{
+  "generic": {
+    "mr_id": "e1b0265263920a6f71ec57261f930a0d9f2809ff",
+    "event_time": "2018-11-11T01:29:12+01:00",
+    "event_timestamp": 1541896152,
+    "attacker_name": "h4rdcor3",
+    "attacker_planet_name": "I x3 Toffifee",
+    "attacker_planet_coordinates": "5:404:12",
+    "attacker_planet_type": "1",
+    "defender_name": "Vice Lepus",
+    "defender_planet_name": "Zeta",
+    "defender_planet_coordinates": "5:406:5",
+    "defender_planet_type": "1",
+    "missiles_lost_attacker": 1,
+    "missiles_lost_defender": 0
+  },
+  "details": {
+    "defense": [],
+    "defense_destroyed": []
+  }
+}

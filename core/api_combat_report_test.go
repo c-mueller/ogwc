@@ -68,7 +68,16 @@ func Test_ToReportCalculation(t *testing.T) {
 		},
 	})
 
-	data, _ := json.Marshal(calc)
+	calc.RebalancerConfig = RateDeuteriumBalancer{
+		CrystalPerDeuterium: 1.5,
+		MetalPerDeuterium:   2.5,
+		CrystalProportion:   0.5,
+		MetalProportion:     0.5,
+	}
+
+	calc.DeuteriumBalancerActive = true
+
+	data, _ := json.MarshalIndent(calc.GetReport(),"","  ")
 
 	fmt.Println(string(data))
 }

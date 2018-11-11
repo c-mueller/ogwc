@@ -20,16 +20,24 @@ package core
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/GeertJohan/go.rice"
 )
 
 var Entities map[string]EntityType
 
+var IPMCost Resources
+
 func init() {
 	cfgBucket := rice.MustFindBox("config")
 	data, _ := cfgBucket.Bytes("entities.json")
 
+	ipmData, _ := cfgBucket.Bytes("ipm_cost.json")
+
 	json.Unmarshal(data, &Entities)
+	json.Unmarshal(ipmData, &IPMCost)
+
+	fmt.Println(IPMCost)
 }
 
 type EntityType struct {

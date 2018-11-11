@@ -38,11 +38,12 @@ func init() {
 }
 
 type OGWCApplication struct {
-	repo         repo.Repository
-	engine       *gin.Engine
-	api          core.OGameAPI
-	UserAccounts []MetricsUserAccount
-	versionInfo  VersionInfo
+	repo           repo.Repository
+	engine         *gin.Engine
+	api            core.OGameAPI
+	UserAccounts   []MetricsUserAccount
+	APIUrlTemplate string
+	versionInfo    VersionInfo
 }
 
 type VersionInfo struct {
@@ -59,14 +60,16 @@ func (a *OGWCApplication) InitVersionInfo(ctx, rev, ver, ts string) {
 	a.versionInfo.Version = ver
 	a.versionInfo.BuildTimestamp = ts
 
+	hashsum := GetUIRevision()
+	a.versionInfo.FrontendHashsum = hashsum
+}
+
+func GetUIRevision() string {
 	ui, err := rice.FindBox("app-ui")
 	if err != nil {
-		a.versionInfo.FrontendHashsum = "DEV-VERSION"
-		return
+		return "DEV-VERSION"
 	}
-
 	h := sha256.New()
-
 	ui.Walk("/", func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			data, err := ui.Bytes(path)
@@ -78,11 +81,9 @@ func (a *OGWCApplication) InitVersionInfo(ctx, rev, ver, ts string) {
 
 		return nil
 	})
-
 	hashsum := make([]byte, 0)
-
 	hashsum = h.Sum(hashsum)
-	a.versionInfo.FrontendHashsum = hex.EncodeToString(hashsum)
+	return hex.EncodeToString(hashsum)
 }
 
 func (a *OGWCApplication) Init(c *redis.Options) error {
@@ -91,7 +92,9 @@ func (a *OGWCApplication) Init(c *redis.Options) error {
 	a.repo = repo.Repository{
 		Options: *c,
 	}
-	a.api = core.OGAPIRestAPI{}
+	a.api = core.OGAPIRestAPI{
+		QueryURL: a.APIUrlTemplate,
+	}
 
 	a.engine = gin.Default()
 	a.engine.Use(cors.Default())

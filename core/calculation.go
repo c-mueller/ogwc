@@ -42,6 +42,7 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 	winPerPlayer := make(ResourcesMap)
 
 	claimedPerPlayer := make(ResourcesMap)
+	claimedPerPlayerWithoutRebalancing := make(ResourcesMap)
 	balancePerPlayer := make(ResourcesMap)
 
 	totalLosses := Resources{}
@@ -54,14 +55,24 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 
 		fleetLoss := Fleet{}
 
+		// Add Additional fleet losses to total fleet losses (if present)
 		if participant.AdditionalLosses != nil {
 			loss = loss.Add(participant.AdditionalLosses.ToResources())
 			fleetLoss = fleetLoss.Add(*participant.AdditionalLosses)
 		}
 
+		// Add Fleet loss ass Resources
 		loss = loss.Add(c.Losses[participant.Name].ToResources())
+
+		// Add additional Resource losses
+		// e.g. flight costs
 		if participant.AdditionalResourceLosses != nil {
 			loss = loss.Add(*participant.AdditionalResourceLosses)
+		}
+
+		// Add Losses from Missile Reports
+		for _, v := range c.MissileReports[participant.Name] {
+			loss = loss.Add(v)
 		}
 
 		fleetLoss = fleetLoss.Add(c.Losses[participant.Name])
@@ -101,6 +112,8 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 
 	totalWinNoFixed := totalWin.Add(Resources{})
 
+	enableRebalancer := totalWinNoFixed.Deuterium < 0
+
 	for _, p := range participantsByDistibutionType[FIXED_AMOUNT] {
 		if p.FixedResourceAmount == nil {
 			continue
@@ -122,21 +135,27 @@ func (c *CombatReportCalculation) GetReport() CalculationResponse {
 
 	for _, p := range c.Participants {
 		claimedPerPlayer[p.Name] = lossesPerPlayer[p.Name].Add(winPerPlayer[p.Name])
+		claimedPerPlayerWithoutRebalancing[p.Name] = claimedPerPlayer[p.Name]
+		if c.DeuteriumBalancerActive {
+			claimedPerPlayer[p.Name] = c.RebalancerConfig.Balance(claimedPerPlayer[p.Name])
+		}
+
 		balancePerPlayer[p.Name] = incomePerPlayer[p.Name].Sub(claimedPerPlayer[p.Name])
 	}
 
 	return CalculationResponse{
-		TotalIncome:             totalIncome,
-		TotalLoss:               totalLosses,
-		TotalWin:                totalWin,
-		WinPerParticipant:       winPerPlayer,
-		LossPerParticipant:      lossesPerPlayer,
-		IncomePerParticipant:    incomePerPlayer,
-		ClaimedPerParticipant:   claimedPerPlayer,
-		BalancePerParticipant:   balancePerPlayer,
-		HarvestedPerParticipant: harvestedPerPlayer,
-		LootPerParticipant:      lootPerPlayer,
-		FleetLossPerParticipant: fleetLossPerPlayer,
+		TotalIncome:                        totalIncome,
+		TotalLoss:                          totalLosses,
+		TotalWin:                           totalWin,
+		WinPerParticipant:                  winPerPlayer,
+		LossPerParticipant:                 lossesPerPlayer,
+		IncomePerParticipant:               incomePerPlayer,
+		ClaimedPerParticipant:              claimedPerPlayer,
+		ClaimedPerParticipantNotRebalanced: claimedPerPlayerWithoutRebalancing,
+		BalancePerParticipant:              balancePerPlayer,
+		HarvestedPerParticipant:            harvestedPerPlayer,
+		LootPerParticipant:                 lootPerPlayer,
+		FleetLossPerParticipant:            fleetLossPerPlayer,
 	}
 }
 
@@ -190,7 +209,7 @@ func (c *CombatReportCalculation) AddCombatReport(cr CombatReport, isAttacker bo
 		}
 	}
 
-	c.RawCombatReports = append(c.RawCombatReports, cr)
+	c.RawReports.CombatReports = append(c.RawReports.CombatReports, cr)
 }
 
 func (c *CombatReportCalculation) RebalanceDistributionPercentage() {
@@ -218,7 +237,7 @@ func (c *CombatReportCalculation) AddHarvestReport(h HarvestReport) {
 	m = append(m, h.ToResources())
 	c.HarvestReports[h.Generic.OwnerName] = m
 
-	c.RawHarvestReports = append(c.RawHarvestReports, h)
+	c.RawReports.HarvestReports = append(c.RawReports.HarvestReports, h)
 
 	if !c.Participants.IsPresent(h.Generic.OwnerName) {
 		c.Participants = append(c.Participants, Participant{
@@ -226,4 +245,15 @@ func (c *CombatReportCalculation) AddHarvestReport(h HarvestReport) {
 			DistribuitonMode: NONE,
 		})
 	}
+}
+
+func (c *CombatReportCalculation) AddMissileReport(m MissileReport) {
+	mrs := c.MissileReports[m.Generic.AttackerName]
+	if mrs == nil {
+		mrs = make([]Resources, 0)
+	}
+
+	mrs = append(mrs, m.GetLosses(c.Attacker))
+
+	c.RawReports.MissileReports = append(c.RawReports.MissileReports, m)
 }

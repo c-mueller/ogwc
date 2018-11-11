@@ -34,48 +34,49 @@ type OGameAPI interface {
 }
 
 type OGAPIRestAPI struct {
+	QueryURL string
 }
 
-func (OGAPIRestAPI) GetCombatReport(key string) (*CombatReport, error) {
-	url := fmt.Sprintf("https://ogapi.rest/v1/report/%s/0",key)
+func (a OGAPIRestAPI) GetCombatReport(key string) (*CombatReport, error) {
+	url := fmt.Sprintf(a.QueryURL, key)
 
 	res, err := http.Get(url)
 
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	var cr CombatReport
 	err = json.Unmarshal(data, &cr)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	return &cr, nil
 }
 
 func (OGAPIRestAPI) GetHarvestReport(key string) (*HarvestReport, error) {
-	url := fmt.Sprintf("https://ogapi.rest/v1/report/%s/0",key)
+	url := fmt.Sprintf("https://ogapi.rest/v1/report/%s/0", key)
 
 	res, err := http.Get(url)
 
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	var cr HarvestReport
 	err = json.Unmarshal(data, &cr)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	return &cr, nil
 }

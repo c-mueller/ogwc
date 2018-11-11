@@ -17,15 +17,22 @@
 package core
 
 import (
+	"encoding/json"
+	"fmt"
 	"testing"
 )
 
 func TestOGAPIRestAPI_GetReport(t *testing.T) {
-	//api := OGAPIRestAPI{}
-	//
-	//cr, err := api.GetCombatReport("cr-de-138-25570d783e74776c24c99e2d20af12dc9897106d")
-	//assert.NoError(t, err)
-	//
-	//fmt.Println(cr)
 
+	rs := `{"metal":25000000,"crystal":25000000,"deuterium":0,"id":"meddl"}`
+
+	var res IdentifiableResources
+
+	json.Unmarshal([]byte(rs), &res)
+
+	ires := res.ToIdentifiableResources()
+
+	s, _ := json.Marshal(ires)
+
+	fmt.Println(string(s))
 }

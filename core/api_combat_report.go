@@ -38,8 +38,10 @@ func (r *CombatReport) ToReportCalculation(isAttacker bool) *CombatReportCalcula
 		TotalLoot:            loot,
 		Losses:               lossMap,
 		LossesOpponent:       opponentLossMap,
-		RawCombatReports:     []CombatReport{*r},
 		HarvestReports:       make(map[string][]Resources),
+		RawReports: RawReports{
+			CombatReports: []CombatReport{*r},
+		},
 	}
 }
 

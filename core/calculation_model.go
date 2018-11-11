@@ -26,22 +26,33 @@ const (
 
 type FleetMap map[string]Fleet
 type RessourceSliceMap map[string][]Resources
+type ResourcesMap map[string]Resources
+type ParticipantList []Participant
 
 type CombatReportCalculation struct {
 	Participants ParticipantList `json:"participants"`
+
+	DeuteriumBalancerActive bool                  `json:"deuterium_balancer_active"`
+	RebalancerConfig        RateDeuteriumBalancer `json:"rebalancer_config"`
 
 	Attacker           bool              `json:"attacker"`
 	InitialFleet       FleetMap          `json:"initial_fleet"`
 	Losses             FleetMap          `json:"losses"`
 	TotalLoot          Resources         `json:"total_loot"`
 	LootPerParticipant RessourceSliceMap `json:"loot_per_participant"`
+	MissileReports     RessourceSliceMap `json:"missile_reports"`
 	HarvestReports     RessourceSliceMap `json:"harvest_reports"`
 
 	InitialFleetOpponent FleetMap `json:"initial_fleet_opponent"`
 	LossesOpponent       FleetMap `json:"losses_opponent"`
 
-	RawCombatReports  []CombatReport  `json:"raw_combat_reports"`
-	RawHarvestReports []HarvestReport `json:"raw_harvest_reports"`
+	RawReports RawReports `json:"raw_reports"`
+}
+
+type RawReports struct {
+	CombatReports  []CombatReport  `json:"combat_reports"`
+	HarvestReports []HarvestReport `json:"harvest_reports"`
+	MissileReports []MissileReport `json:"missile_reports"`
 }
 
 type CalculationResponse struct {
@@ -57,12 +68,10 @@ type CalculationResponse struct {
 	IncomePerParticipant    ResourcesMap `json:"income_per_participant"`
 	WinPerParticipant       ResourcesMap `json:"win_per_participant"`
 
-	BalancePerParticipant ResourcesMap `json:"balance_per_participant"`
-	ClaimedPerParticipant ResourcesMap `json:"claimed_per_participant"`
+	BalancePerParticipant              ResourcesMap `json:"balance_per_participant"`
+	ClaimedPerParticipantNotRebalanced ResourcesMap `json:"claimed_per_participant_not_rebalanced"`
+	ClaimedPerParticipant              ResourcesMap `json:"claimed_per_participant"`
 }
-
-type ResourcesMap map[string]Resources
-type ParticipantList []Participant
 
 type Participant struct {
 	Name                     string           `json:"name"`

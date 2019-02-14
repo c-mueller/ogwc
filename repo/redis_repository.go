@@ -1,5 +1,5 @@
 // ogwc (https://github.com/c-mueller/ogwc).
-// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+// Copyright (C) 2018-2019 Christian Müller <dev@c-mueller.xyz>.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -22,19 +22,26 @@ import (
 	"github.com/go-redis/redis"
 )
 
-type Repository struct {
+type Repo interface {
+	Connect() error
+	Insert(core.CombatReportCalculation) string
+	Update(string, core.CombatReportCalculation) error
+	Get(string) *core.CombatReportCalculation
+}
+
+type RedisRepository struct {
 	Options redis.Options
 	client  *redis.Client
 }
 
-func (r *Repository) Connect() error {
+func (r *RedisRepository) Connect() error {
 	r.client = redis.NewClient(&r.Options)
 
 	cmd := r.client.Ping()
 	return cmd.Err()
 }
 
-func (r *Repository) Insert(calculation core.CombatReportCalculation) string {
+func (r *RedisRepository) Insert(calculation core.CombatReportCalculation) string {
 	data, _ := json.Marshal(calculation)
 
 	uidString := ""
@@ -49,7 +56,7 @@ func (r *Repository) Insert(calculation core.CombatReportCalculation) string {
 	return uidString
 }
 
-func (r *Repository) Update(id string, calc core.CombatReportCalculation) error {
+func (r *RedisRepository) Update(id string, calc core.CombatReportCalculation) error {
 	data, _ := json.Marshal(calc)
 
 	cmd := r.client.Set(id, data, -1)
@@ -57,7 +64,7 @@ func (r *Repository) Update(id string, calc core.CombatReportCalculation) error 
 	return cmd.Err()
 }
 
-func (r *Repository) Get(id string) *core.CombatReportCalculation {
+func (r *RedisRepository) Get(id string) *core.CombatReportCalculation {
 	cmd := r.client.Get(id)
 
 	if cmd.Err() != nil {

@@ -1,5 +1,5 @@
 // ogwc (https://github.com/c-mueller/ogwc).
-// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+// Copyright (C) 2018-2019 Christian Müller <dev@c-mueller.xyz>.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -34,7 +34,7 @@ import (
 var log = logging.MustGetLogger("application")
 
 type OGWCApplication struct {
-	repo           repo.Repository
+	repo           repo.RedisRepository
 	engine         *gin.Engine
 	api            core.OGameAPI
 	UserAccounts   []MetricsUserAccount
@@ -85,7 +85,7 @@ func GetUIRevision() string {
 func (a *OGWCApplication) Init(c *redis.Options) error {
 	users := a.initMetricsUserAccounts()
 
-	a.repo = repo.Repository{
+	a.repo = repo.RedisRepository{
 		Options: *c,
 	}
 	a.api = core.OGAPIRestAPI{

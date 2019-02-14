@@ -1,5 +1,5 @@
 // ogwc (https://github.com/c-mueller/ogwc).
-// Copyright (c) 2018 Christian Müller <cmueller.dev@gmail.com>.
+// Copyright (C) 2018-2019 Christian Müller <dev@c-mueller.xyz>.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by

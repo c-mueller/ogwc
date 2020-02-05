@@ -129,6 +129,36 @@
       "deuterium": 15000
     }
   },
+  "217": {
+    "id": 217,
+    "name": "Crawler",
+    "cargo_capacity": 0,
+    "cost": {
+      "metal": 2000,
+      "crystal": 2000,
+      "deuterium": 1000
+    }
+  },
+  "218": {
+    "id": 218,
+    "name": "Reaper",
+    "cargo_capacity": 10000,
+    "cost": {
+      "metal": 85000,
+      "crystal": 55000,
+      "deuterium": 20000
+    }
+  },
+  "219": {
+    "id": 219,
+    "name": "Pathfinder",
+    "cargo_capacity": 10000,
+    "cost": {
+      "metal": 8000,
+      "crystal": 15000,
+      "deuterium": 8000
+    }
+  },
   "401": {
     "id": 401,
     "name": "Raketenwerfer",

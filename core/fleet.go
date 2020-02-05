@@ -31,6 +31,10 @@ type Fleet struct {
 	Destroyer     uint `json:"destroyer" eid:"213"`
 	Deathstar     uint `json:"deathstar" eid:"214"`
 
+	Crawler    uint `json:"crawler" eid:"217"`
+	Reaper     uint `json:"reaper" eid:"218"`
+	Pathfinder uint `json:"pathfinder" eid:"219"`
+
 	SmallCargo uint `json:"small_cargo" eid:"202"`
 	LargeCargo uint `json:"large_cargo" eid:"203"`
 	Recycler   uint `json:"recycler" eid:"209"`

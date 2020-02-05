@@ -19,7 +19,7 @@ package repo
 import (
 	"encoding/json"
 	"github.com/c-mueller/ogwc/core"
-	bolt "go.etcd.io/bbolt"
+	"go.etcd.io/bbolt"
 )
 
 const bucketName = "reports"
@@ -28,11 +28,11 @@ var bucketNameBytes = []byte(bucketName)
 
 type BoltRepository struct {
 	Path string
-	db   *bolt.DB
+	db   *bbolt.DB
 }
 
 func (b *BoltRepository) Connect() error {
-	db, err := bolt.Open(b.Path, 0666, bolt.DefaultOptions)
+	db, err := bbolt.Open(b.Path, 0666, bbolt.DefaultOptions)
 	if err != nil {
 		return err
 	}

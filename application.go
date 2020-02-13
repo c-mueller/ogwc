@@ -34,7 +34,7 @@ import (
 var log = logging.MustGetLogger("application")
 
 type OGWCApplication struct {
-	repo           repo.RedisRepository
+	repo           repo.Repo
 	engine         *gin.Engine
 	api            core.OGameAPI
 	UserAccounts   []MetricsUserAccount
@@ -82,11 +82,17 @@ func GetUIRevision() string {
 	return hex.EncodeToString(hashsum)
 }
 
-func (a *OGWCApplication) Init(c *redis.Options) error {
+func (a *OGWCApplication) Init(useRedis bool, boltpath string, c *redis.Options) error {
 	users := a.initMetricsUserAccounts()
 
-	a.repo = repo.RedisRepository{
-		Options: *c,
+	if useRedis {
+		a.repo = &repo.RedisRepository{
+			Options: *c,
+		}
+	} else {
+		a.repo = &repo.BoltRepository{
+			Path: boltpath,
+		}
 	}
 	a.api = core.OGAPIRestAPI{
 		QueryURL: a.APIUrlTemplate,

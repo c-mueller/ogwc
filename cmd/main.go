@@ -43,11 +43,14 @@ var (
 	redisPass = serverCmd.Flag("redis-password", "The password for the redis server").Default("").String()
 	redisDb   = serverCmd.Flag("redis-database", "The index of the redis db to use").Default("0").Int()
 
+	useRedis = serverCmd.Flag("redis", "Use Redis based repository").Short('R').Bool()
+	boltPath = serverCmd.Flag("bolt-path", "Path to the BoltDB repo").Short('p').Default("ogwc.db").String()
+
 	ogameApiUrl = serverCmd.Flag("ogame-api-proxy-url", "The url to the Ogame API Proxy").Default("https://ogapi.rest/v1/report/%s/0").String()
 
 	metricsUsers = serverCmd.Flag("metrics-user", "Add a user for Metrics").Short('u').Strings()
 
-	prodFlag = serverCmd.Flag("prod","Set to true to make Gin run in Production mode").Short('p').Bool()
+	prodFlag = serverCmd.Flag("dev", "Set to true to make Gin run in Development mode").Bool()
 
 	versionCmd = kingpin.Command("version", "Show version information")
 
@@ -69,7 +72,7 @@ func init() {
 func main() {
 	switch cmd {
 	case "server":
-		if *prodFlag {
+		if !*prodFlag {
 			gin.SetMode(gin.ReleaseMode)
 		}
 
@@ -104,7 +107,7 @@ func main() {
 		}
 
 		app.InitVersionInfo(BuildContext, Revision, Version, BuildTimestamp)
-		app.Init(&redis.Options{
+		app.Init(*useRedis, *boltPath, &redis.Options{
 			Addr:     *redisAddr,
 			DB:       *redisDb,
 			Password: *redisPass,

@@ -19,6 +19,7 @@ package repo
 import (
 	"encoding/json"
 	"github.com/c-mueller/ogwc/core"
+	"github.com/op/go-logging"
 	"go.etcd.io/bbolt"
 )
 
@@ -26,12 +27,15 @@ const bucketName = "reports"
 
 var bucketNameBytes = []byte(bucketName)
 
+var log = logging.MustGetLogger("bolt")
+
 type BoltRepository struct {
 	Path string
 	db   *bbolt.DB
 }
 
 func (b *BoltRepository) Connect() error {
+	log.Infof("Opening BoltDB repository from %q", b.Path)
 	db, err := bbolt.Open(b.Path, 0666, bbolt.DefaultOptions)
 	if err != nil {
 		return err

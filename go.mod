@@ -19,7 +19,7 @@ require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/prometheus/client_golang v1.4.1
 	github.com/stretchr/testify v1.4.0
-	go.etcd.io/bbolt v1.3.3
+	go.etcd.io/bbolt v1.3.5
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
 	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6

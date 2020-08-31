@@ -10,7 +10,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/golang/protobuf v1.3.3 // indirect
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.1.2
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect

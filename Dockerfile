@@ -14,9 +14,17 @@
 ## You should have received a copy of the GNU Affero General Public License
 ## along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM ubuntu:18.04 AS runtime
+FROM golang:buster AS builder
+WORKDIR /go/src/github.com/c-mueller
+RUN git clone https://github.com/c-mueller/ogwc.git
+WORKDIR /go/src/github.com/c-mueller/ogwc
+ENV CGO_ENABLED 0
+RUN apt-get update && apt-get install -y nodejs
+RUN make build
+
+FROM alpine:latest AS runtime
 WORKDIR /ogwc
-COPY build/ogwc /bin/ogwc
+COPY --from=builder /go/src/github.com/c-mueller/ogwc/build/ogwc /bin/ogwc
 EXPOSE 16666
 ENV REDIS_ADDR=myredis:6379
 ENV REDIS_DB=0

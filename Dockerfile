@@ -19,7 +19,7 @@ WORKDIR /go/src/github.com/c-mueller
 RUN git clone https://github.com/c-mueller/ogwc.git
 WORKDIR /go/src/github.com/c-mueller/ogwc
 ENV CGO_ENABLED 0
-RUN apt-get update && apt-get install -y nodejs
+RUN apt-get update && apt-get install -y nodejs npm
 RUN make build
 
 FROM alpine:latest AS runtime

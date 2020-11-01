@@ -17,7 +17,7 @@ install:
 	cd ui && npm install
 	go get -v
 
-build_frontend: mkdirs
+build_frontend: mkdirs install
 	cd ui && npx ng build --prod --output-path ../app-ui/
 
 embed: build_frontend

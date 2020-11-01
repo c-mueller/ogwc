@@ -25,6 +25,12 @@ func (r *CombatReport) ToReportCalculation(isAttacker bool) *CombatReportCalcula
 	initialOpponentFleet := r.getInitialFleet(getBPOpponent)
 
 	lossMap := r.getFleetLosses(getBP, getBRE)
+	for playerName, _ := range initialFleet {
+		if _, ok := lossMap[playerName]; !ok {
+			// Add no losses if the participant did not loose anything
+			lossMap[playerName] = Fleet{}
+		}
+	}
 	opponentLossMap := r.getFleetLosses(getBPOpponent, getBPEOpponent)
 
 	participants, lootPerPlayer := r.getParticipantsAndLootDistribution(initialFleet, loot)

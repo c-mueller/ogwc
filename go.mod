@@ -3,7 +3,7 @@ module github.com/c-mueller/ogwc
 go 1.13
 
 require (
-	github.com/GeertJohan/go.rice v1.0.0
+	github.com/GeertJohan/go.rice v1.0.2
 	github.com/daaku/go.zipexe v1.0.1 // indirect
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
